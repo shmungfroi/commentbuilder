@@ -130,14 +130,13 @@ with sync_playwright() as p:
     # ---------------- S05 Stage 5 + instruments ----------------
     load(); chip('stage', 'Stage 5'); chip('category', 'P'); chip('instrument', 'Guitar')
     vis = bank_ids()
-    inst_ok = all(byid[i]['instrument'] == 'Guitar' and byid[i]['category'] == 'P' for i in vis)
-    chip('category', 'P')  # clear category
-    chip('instrument', 'Guitar')  # clear instrument
+    inst_ok = all(byid[i]['instrument'] in ('Guitar', 'Instrument') and byid[i]['category'] == 'P' for i in vis)
+    chip('category', 'P')  # clear category; the student's instrument stays (v5.4)
     for ct in ('learning_strength', 'strategy_to_improve'):
         select(pick(stage='Stage 5', commentType=ct, category='P', instrument='Guitar')['id'])
         for c in 'CL': select(pick(stage='Stage 5', commentType=ct, category=c)['id'])
-    rec('S05', 'Stage 5 Standard, Guitar, both outputs', 'instrument filter exact; both copyable',
-        f'bank all Guitar P={inst_ok} ({len(vis)}); LS={copy_on("LS")} STI={copy_on("STI")}', inst_ok and copy_on('LS') and copy_on('STI'))
+    rec('S05', 'Stage 5 Standard, Guitar, both outputs', 'P bank = Guitar + generic only; both copyable',
+        f'bank P all Guitar/generic={inst_ok} ({len(vis)}); LS={copy_on("LS")} STI={copy_on("STI")}', inst_ok and copy_on('LS') and copy_on('STI'))
 
     # ---------------- S06 matrix ----------------
     for course in ('Music 1', 'Music 2'):
@@ -184,8 +183,8 @@ with sync_playwright() as p:
 
     # ---------------- V04 wrong builder / category ----------------
     load(); chip('stage', 'Stage 5')
-    sid = pick(stage='Stage 5', commentType='strategy_to_improve', category='P')['id']
-    page.locator(f'#bank-grid .card[data-id="{sid}"]').drag_to(page.locator('#dz-LS-1'))
+    sid = pick(stage='Stage 5', commentType='strategy_to_improve', category='C')['id']
+    page.locator(f'#bank-grid .card[data-id="{sid}"]').drag_to(page.locator('#dz-LS-2'))
     m1 = msg('LS'); f1 = filled('LS')[0]
     sid = pick(stage='Stage 5', commentType='learning_strength', category='C')['id']
     page.locator(f'#bank-grid .card[data-id="{sid}"]').drag_to(page.locator('#dz-LS-1'))
@@ -194,12 +193,14 @@ with sync_playwright() as p:
         f'"{m1}" / "{m2}"', not f1 and not f2 and bool(m1) and bool(m2))
 
     # ---------------- V01 / V02 / R ----------------
-    load(); chip('stage', 'Stage 5')
-    for c in 'PC': select(pick(stage='Stage 5', commentType='learning_strength', category=c)['id'])
+    load(); chip('stage', 'Stage 5'); chip('instrument', 'Instrument')
+    select(pick(stage='Stage 5', commentType='learning_strength', category='P', instrument='Instrument')['id'])
+    select(pick(stage='Stage 5', commentType='learning_strength', category='C')['id'])
     rec('V02', 'Two of three slots', 'copy disabled', f'copy={copy_on("LS")}', not copy_on('LS'))
     select(pick(stage='Stage 5', commentType='learning_strength', category='L')['id'])
     rec('V01', 'Three valid slots', 'copy enabled, all checks ✔', f'copy={copy_on("LS")}; ✘ count={valtext("LS").count("✘")}', copy_on('LS') and '✘' not in valtext('LS'))
-    for c in 'PCL': select(pick(stage='Stage 5', commentType='strategy_to_improve', category=c)['id'])
+    select(pick(stage='Stage 5', commentType='strategy_to_improve', category='P', instrument='Instrument')['id'])
+    for c in 'CL': select(pick(stage='Stage 5', commentType='strategy_to_improve', category=c)['id'])
     chip('tier', 'Basic'); chip('category', 'C'); page.click('#reset-filters')
     rec('R01', 'Reset Filters', 'selections and Stage kept', f'LS={filled("LS")} STI={filled("STI")} stage active={chip_active("stage","Stage 5")}',
         filled('LS') == filled('STI') == [True]*3 and chip_active('stage', 'Stage 5'))
@@ -218,10 +219,10 @@ with sync_playwright() as p:
         rec('V06', 'Sentence counter: ?, !, e.g., decimals, quotes, 4 sentences, missing stop', 'all counts correct', f'mismatches={bad}', not bad)
 
         def synthetic(texts, cats=('P', 'C', 'L')):
-            return [dict(id=f'TEST{i}', text=t, stage='Stage 5', commentType='learning_strength', category=c,
+            return [dict(id=f'TEST{i}', text=t, stage='Stage 4', commentType='learning_strength', category=c,
                          course=None, stageCourse=None, topic=None, unit=None) for i, (t, c) in enumerate(zip(texts, cats))]
         page.evaluate("() => {}")
-        chip('stage', 'Stage 5')
+        chip('stage', 'Stage 4')
         probes = {
             'pronoun': ['Her technique is secure.', 'Composes with clarity.', 'Listens with focus.'],
             'them': ['Applies feedback given to them.', 'Composes with clarity.', 'Listens with focus.'],
@@ -244,8 +245,9 @@ with sync_playwright() as p:
         rec('V05', 'Synthetic policy breaches', 'each rejected', 'no test hook in this build', None)
 
     # ---------------- V07 character count / limit ----------------
-    load(); chip('stage', 'Stage 5')
-    for c in 'PCL': select(pick(stage='Stage 5', commentType='strategy_to_improve', category=c)['id'])
+    load(); chip('stage', 'Stage 5'); chip('instrument', 'Instrument')
+    select(pick(stage='Stage 5', commentType='strategy_to_improve', category='P', instrument='Instrument')['id'])
+    for c in 'CL': select(pick(stage='Stage 5', commentType='strategy_to_improve', category=c)['id'])
     if page.locator('#charlimit-STI').count():
         n = len(preview('STI'))
         count_txt = page.locator('#charcount-STI').inner_text()
@@ -309,13 +311,15 @@ with sync_playwright() as p:
             for c, k in kw.items():
                 select(pick(stage=stage, commentType=ct, category=c, **k)['id'])
     if page.locator('#crosscheck').count() or True:
-        build_both('Stage 5', {'P': dict(instrument='Guitar'), 'C': {}, 'L': {}}, {'P': dict(instrument='Voice'), 'C': {}, 'L': {}})
+        build_both('Stage 5', {'P': dict(instrument='Guitar'), 'C': {}, 'L': {}}, {'P': dict(instrument='Voice'), 'C': {}, 'L': {}},
+                   extra=lambda: chip('instrument', 'Guitar'))
         t = xc()
-        rec('X01', 'Stage 5: Strengths Guitar vs Strategies Voice', 'instrument reminder; both still copyable',
-            f'panel="{(t or "")[:90]}"; LS copy={copy_on("LS")} STI copy={copy_on("STI")}; in LS checklist={"Cross-check" in valtext("LS")}',
-            t is not None and 'instrument differs' in t and copy_on('LS') and copy_on('STI') and 'Cross-check' in valtext('LS'))
+        rec('X01', 'Stage 5, student instrument Guitar: try a Voice strategy', 'prevented (v5.4 instrument rule); Guitar strength kept',
+            f'LS={filled("LS")} STI={filled("STI")}; panel="{(t or "")[:60]}"',
+            filled('LS') == [True]*3 and filled('STI') == [False, True, True])
         build_both('Stage 5', {'P': dict(instrument='Instrument', tier='Sound'), 'C': dict(tier='Sound'), 'L': dict(tier='Sound')},
-                   {'P': dict(instrument='Guitar', tier='Sound'), 'C': dict(tier='Sound'), 'L': dict(tier='Sound')})
+                   {'P': dict(instrument='Guitar', tier='Sound'), 'C': dict(tier='Sound'), 'L': dict(tier='Sound')},
+                   extra=lambda: chip('instrument', 'Guitar'))
         t = xc()
         rec('X02', 'Generic "Instrument" vs Guitar, same tiers', 'no reminder (generic is compatible)', f'panel="{(t or "")[:90]}"',
             t is not None and t.startswith('✔'))
@@ -332,7 +336,8 @@ with sync_playwright() as p:
         t = xc()
         rec('X04', 'Stage 4: Strengths Jazz vs Strategies Sound Lab', 'unit reminder', f'panel="{(t or "")[:110]}"', t is not None and 'Unit differs' in t)
         build_both('Stage 5', {'P': dict(instrument='Piano', tier='Extensive'), 'C': dict(tier='Sound'), 'L': dict(tier='Sound')},
-                   {'P': dict(instrument='Piano', tier='Elementary'), 'C': dict(tier='Thorough'), 'L': dict(tier='Sound')})
+                   {'P': dict(instrument='Piano', tier='Elementary'), 'C': dict(tier='Thorough'), 'L': dict(tier='Sound')},
+                   extra=lambda: chip('instrument', 'Piano'))
         t = xc()
         rec('X05', 'Tier gap: P Extensive vs Elementary (2 levels); C Sound vs Thorough (1 level)', 'P flagged, C not',
             f'panel="{(t or "")[:120]}"', t is not None and 'Performance tier gap' in t and 'Composition tier gap' not in t)
@@ -345,10 +350,48 @@ with sync_playwright() as p:
         t = xc()
         rec('X06', 'General (Basic) swapped into Listening vs Listening strength (Extensive)', 'not a tier gap (different category)',
             f'panel="{(t or "")[:110]}"', t is not None and 'tier gap' not in t)
-        load(); chip('stage', 'Stage 5')
-        select(pick(stage='Stage 5', commentType='learning_strength', category='P')['id'])
+        load(); chip('stage', 'Stage 5'); chip('instrument', 'Instrument')
+        select(pick(stage='Stage 5', commentType='learning_strength', category='P', instrument='Instrument')['id'])
         t = xc()
         rec('X07', 'Only Strengths started', 'cross-check waits for both', f'panel="{t}"', t is not None and t.startswith('Shown once'))
+
+    # ---------------- v5.4: instrument rule, Stage 4 chips, Next student ----------------
+    load(); chip('stage', 'Stage 5')
+    p_id = pick(stage='Stage 5', commentType='learning_strength', category='P', instrument='Guitar')['id']
+    r = select(p_id)
+    c_r = select(pick(stage='Stage 5', commentType='learning_strength', category='C')['id'])
+    note = page.locator('#context-notice').inner_text()
+    rec('I01', 'Stage 5, no instrument chosen: Performance vs Composition', 'P blocked with reason; C selectable; notice shown',
+        f'P={r}; C={c_r}; notice="{note[:60]}"', r.startswith('disabled') and 'instrument' in r and c_r == 'ok' and 'instrument' in note)
+    chip('instrument', 'Guitar')
+    vis = bank_ids()
+    p_ok = all(byid[i]['instrument'] in ('Guitar', 'Instrument') for i in vis if byid[i]['category'] == 'P')
+    n_c = sum(1 for i in vis if byid[i]['category'] in 'CLG')
+    rec('I02', 'Choose Guitar', 'P narrowed to Guitar + generic; C/L/G still listed', f'P ok={p_ok}; C/L/G cards={n_c}', p_ok and n_c > 0)
+    select(p_id); select(pick(stage='Stage 5', commentType='learning_strength', category='L')['id'])
+    before = copy_on('LS')
+    chip('instrument', 'Voice')
+    v = valtext('LS')
+    rec('I03', 'Guitar strength selected, then instrument changed to Voice', 'flagged, copy disabled (not silently kept)',
+        f'copy before={before} after={copy_on("LS")}; check="{[l for l in v.split(chr(10)) if "instrument" in l][:1]}"',
+        before and not copy_on('LS') and 'Guitar statement' in v)
+    load(); chip('stage', 'Stage 4')
+    dis = page.locator('#filter-instrument .chip[data-value="Guitar"]').get_attribute('class')
+    page.click('#filter-instrument .chip[data-value="Guitar"]', force=True)
+    cnt = page.locator('#bank-grid .card').count()
+    rec('I04', 'Stage 4: click Guitar chip', 'disabled; bank not emptied', f'class="{dis}"; bank cards={cnt}', 'disabled' in dis and cnt > 0)
+    if page.locator('#next-student').count():
+        load(); chip('stage', 'Stage 6'); chip('course', 'Music 1'); chip('stageCourse', 'Preliminary'); chip('topic', 'Baroque Music'); chip('tier', 'Sound')
+        for ct in ('learning_strength', 'strategy_to_improve'):
+            for c in 'PMA': select(pick(stage='Stage 6', course='Music 1', stageCourse='Preliminary', commentType=ct, category=c, topic='Baroque Music', tier='Sound')['id'])
+        full = filled('LS') + filled('STI')
+        page.click('#next-student')
+        kept = all(chip_active(g, v) for g, v in (('stage', 'Stage 6'), ('course', 'Music 1'), ('stageCourse', 'Preliminary'), ('topic', 'Baroque Music')))
+        rec('N01', 'Next student', 'both comments cleared; tier cleared; Stage/Course/Level/Topic kept',
+            f'before={full.count(True)} filled; after LS={filled("LS")} STI={filled("STI")}; context kept={kept}; tier cleared={not chip_active("tier","Sound")}',
+            full.count(True) == 6 and filled('LS') == filled('STI') == [False]*3 and kept and not chip_active('tier', 'Sound'))
+    else:
+        rec('N01', 'Next student', 'button present', 'no Next student button in this build', False)
 
     # ---------------- A01 keyboard ----------------
     load()

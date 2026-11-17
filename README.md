@@ -9,6 +9,7 @@ A standalone, offline, single-file web app for building Sentral-ready **Learning
 1. **Set the reporting context.**
    - Choose a **Stage**.
    - For Stage 6, also choose **Course** (Music 1 / Music 2), **Stage Course** (Preliminary / HSC) and a **Comment Profile**.
+   - In Stage 5, also choose the **student's instrument** ("Instrument" for generic wording) before picking a Performance sentence.
    - Statements can be browsed before this, but not selected.
 2. **Fill both outputs.**
    - Each output takes three sentences, one per slot (e.g. Performance / Composition / Listening).
@@ -19,6 +20,7 @@ A standalone, offline, single-file web app for building Sentral-ready **Learning
    - Amber ⚠ lines are reminders only (e.g. mixed topics, or a Strengths ↔ Strategies cross-check).
 4. **Character count.** It shows under each preview. Enter the verified Sentral limit in the **Sentral limit** box. It is remembered in your browser and blank by default.
 5. **Copy** each output and paste it into Sentral.
+6. **Next student** clears both comments and the per-student filters, but keeps the class context.
 
 ## Repository layout
 

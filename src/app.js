@@ -22,7 +22,7 @@
   const COMMENT_PROFILES = DATA.metadata.commentProfiles || {}; // { "Stage 6 Performance": ["P","M","A"], ... }
   const CATEGORY_LABEL_OVERRIDES = DATA.metadata.categoryLabelOverrides || {};
 
-  const APP_VERSION = '5.3';
+  const APP_VERSION = '5.4';
   document.getElementById('data-status').textContent =
     `${statements.length} statements loaded · app v${APP_VERSION} · data ${DATA.metadata.version}`;
 
@@ -165,6 +165,8 @@
       chip.textContent = getLabel ? getLabel(val) : val;
       chip.dataset.value = val;
       chip.addEventListener('click', () => {
+        // v5.4: disabled chips (e.g. specific instruments in Stage 4) do nothing.
+        if (chip.classList.contains('disabled')) return;
         if (state.filters[filterKey] === val){
           // v5.2: the active Stage 6 comment profile cannot be switched off
           // (a default profile would otherwise stay in force invisibly).
@@ -172,9 +174,8 @@
           state.filters[filterKey] = null;
         } else {
           state.filters[filterKey] = val;
-          if (filterKey === 'category' && val !== 'P'){
-            state.filters.instrument = null;
-          }
+          // v5.4: the instrument is the student's instrument (context for
+          // Performance), so choosing another category no longer clears it.
         }
         if (onChange) onChange(val);
         renderFilters();
@@ -378,11 +379,14 @@
     });
 
     // ---- Instrument (Performance only; mainly relevant for Stage 4/5) ----
-    const instrumentDisabled = state.filters.category && state.filters.category !== 'P';
+    // v5.4: Stage 4 Performance statements are all generic ("Instrument"),
+    // so specific instrument chips are disabled there instead of leading to
+    // an empty bank.
+    const instrumentDisabled = false;
     document.getElementById('instrument-group').style.display = isStage6 ? 'none' : '';
     document.querySelectorAll('#filter-instrument .chip').forEach(chip => {
       chip.classList.toggle('active', state.filters.instrument === chip.dataset.value);
-      chip.classList.toggle('disabled', instrumentDisabled);
+      chip.classList.toggle('disabled', isStage4 && chip.dataset.value !== 'Instrument');
     });
     document.getElementById('instrument-group').style.opacity = instrumentDisabled ? '0.45' : '1';
 
@@ -436,12 +440,27 @@
     state.filters.topic = null;
     state.filters.voiceTag = null;
     state.filters.statementLength = null;
-    state.filters.instrument = null;
+    // v5.4: the student's instrument is context, so Reset Filters keeps it.
     rebuildCategoryChips();
     renderFilters();
     renderBank();
     refreshBuilders();
   });
+
+  // v5.4: Next student — clears both comments and the student-level
+  // browsing choices (tier, instrument, category, etc.) but keeps the class
+  // context: Stage, Course, Stage Course, Comment Profile, Topic and Unit.
+  function nextStudent(){
+    ['category','tier','instrument','specificity','generalSubcategory','voiceTag','statementLength','commentType']
+      .forEach(k => { state.filters[k] = null; });
+    rebuildCategoryChips();
+    renderFilters();
+    renderBank();
+    clearAllSelections();
+    COMMENT_TYPE_ORDER.forEach(ct => showCopyMsg(ct, 'Ready for the next student.', false));
+  }
+  const nextBtn = document.getElementById('next-student');
+  if (nextBtn) nextBtn.addEventListener('click', nextStudent);
 
   // ---------- v5.2 Context lock & placement rules ----------
   // Reporting context must be fully chosen before anything can be placed,
@@ -454,12 +473,30 @@
     return null;
   }
 
+  // v5.4: metadata rule performanceInstrumentFilterRequired. In Stage 5,
+  // Performance statements are instrument-specific, so the student's
+  // instrument must be chosen first ("Instrument" = generic).
+  function needsInstrument(s){
+    return state.filters.stage === 'Stage 5' && s.category === 'P' && !state.filters.instrument;
+  }
+  function instrumentMismatch(s){
+    return state.filters.stage === 'Stage 5' && s.category === 'P' && state.filters.instrument &&
+      s.instrument && s.instrument !== 'Instrument' && s.instrument !== state.filters.instrument;
+  }
+  function cardBlocker(s){
+    return contextBlocker() || (needsInstrument(s) ? 'Choose the student’s instrument first' : null);
+  }
+
   function renderContextNotice(){
     const el = document.getElementById('context-notice');
     if (!el) return;
     const block = contextBlocker();
-    el.textContent = block ? `${block} — statements can be browsed but not selected until the reporting context is set.` : '';
-    el.style.display = block ? '' : 'none';
+    let msg = block ? `${block} — statements can be browsed but not selected until the reporting context is set.` : '';
+    if (!block && state.filters.stage === 'Stage 5' && !state.filters.instrument){
+      msg = 'Choose the student’s instrument (or “Instrument” for generic wording) to select Performance statements.';
+    }
+    el.textContent = msg;
+    el.style.display = msg ? '' : 'none';
   }
 
   // Stage 4/5 only: a General strategy may stand in for one of P/C/L in the
@@ -473,6 +510,8 @@
   function placementProblem(s, idx){
     const block = contextBlocker();
     if (block) return block + '.';
+    if (needsInstrument(s)) return 'Choose the student’s instrument first (use “Instrument” for generic wording).';
+    if (instrumentMismatch(s)) return `That is a ${s.instrument} statement; the student’s instrument is ${state.filters.instrument}.`;
     if (s.stage !== state.filters.stage){
       return `That is a ${s.stage} statement; the current Stage is ${state.filters.stage}.`;
     }
@@ -516,9 +555,10 @@
       if (state.filters.topic && s.topic !== state.filters.topic) return false;
       if (state.filters.voiceTag && s.voiceTag !== state.filters.voiceTag) return false;
       if (state.filters.statementLength && s.statementLength !== state.filters.statementLength) return false;
-      if (state.filters.instrument){
-        if (s.category !== 'P') return false; // instrument filter only applies to Performance
-        if (s.instrument !== state.filters.instrument) return false;
+      // v5.4: the instrument narrows Performance statements only (to that
+      // instrument plus generic "Instrument" ones); other categories stay visible.
+      if (state.filters.instrument && s.category === 'P' && s.instrument){
+        if (s.instrument !== state.filters.instrument && s.instrument !== 'Instrument') return false;
       }
       // Stage 6: only show statements belonging to a category that's part
       // of the active profile, so the bank stays aligned with the dropzones.
@@ -594,7 +634,7 @@
 
       const profile = getActiveProfile();
       const slotIndex = profile.categories.indexOf(s.category);
-      const block = contextBlocker();
+      const block = cardBlocker(s);
 
       if (block){
         // v5.2: context lock — browsing allowed, selecting not.
@@ -962,6 +1002,21 @@
 
     // v5.3: Strengths <-> Strategies cross-check reminders (non-blocking)
     crossCheckWarnings().forEach(w => warnings.push(`Cross-check with ${COMMENT_TYPES[otherType(commentType)]}: ${w}`));
+
+    // v5.4: Stage 5 Performance must match the student's instrument.
+    if (state.filters.stage === 'Stage 5'){
+      const pIdx = profile.categories.indexOf('P');
+      const p = pIdx !== -1 && sel[pIdx] && sel[pIdx].statement.category === 'P' ? sel[pIdx].statement : null;
+      if (p){
+        const inst = state.filters.instrument;
+        const ok = !!inst && (p.instrument === inst || p.instrument === 'Instrument');
+        checks.push({
+          label: inst ? `Performance statement matches the student’s instrument (${inst})` + (ok ? '' : ` — it is a ${p.instrument} statement`)
+                      : 'Student’s instrument chosen (Instrument filter)',
+          pass: ok
+        });
+      }
+    }
 
     // Amber warnings (allowed, but worth a second look)
     if (state.filters.stage === 'Stage 6'){

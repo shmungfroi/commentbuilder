@@ -1,6 +1,6 @@
-"""Build v5.3 from the untouched v5.1 original. The embedded statement data is
+"""Build v5.4 from the untouched v5.1 original. The embedded statement data is
 copied byte-for-byte; only CSS, three small HTML hooks and the app script change.
-Usage: python3 -I build_v53.py <original.html> <app_v53.js> <out.html>"""
+Usage: python3 -I build.py <original.html> <app.js> <out.html>"""
 import sys, hashlib
 
 src, js, out = sys.argv[1:4]
@@ -51,6 +51,14 @@ CSS = """
   .review-text.crosscheck-ok{background:#EEF7EA;border-color:#B5D6A7;color:#2e5d1f;}
   .review-text ul{margin:0 0 0 16px;padding:0;}
   .crosscheck-note{margin-top:6px;font-size:0.78rem;font-style:italic;}
+  /* ---- v5.4 ---- */
+  #next-student{
+    width:100%;margin:0 0 14px 0;padding:10px 12px;border:none;border-radius:8px;cursor:pointer;
+    background:var(--navy);color:#fff;font-family:inherit;font-size:0.95rem;font-weight:600;
+  }
+  #next-student:hover{filter:brightness(1.15);}
+  #next-student:focus-visible{outline:3px solid #F4B183;outline-offset:2px;}
+  button.chip.disabled{cursor:not-allowed;}
 </style>"""
 
 def char_row(prefix):
@@ -73,6 +81,8 @@ head = rep(head, '<h3 class="strategy">Strategies to Improve</h3>\n        <div 
            '        <div class="review-text empty" id="crosscheck" aria-live="polite">Shown once both outputs have at least one statement.</div>\n      </div>')
 head = rep(head, '<button id="reset-filters">', '<button type="button" id="reset-filters">')
 
+head = rep(head, '<!-- LEARNING STRENGTHS BUILDER -->',
+           '<button type="button" id="next-student" title="Clears both comments, the tier and the instrument. Keeps Stage, Course, Profile, Topic and Unit.">Next student</button>\n\n    <!-- LEARNING STRENGTHS BUILDER -->')
 s0 = tail.index('<script>') + len('<script>')
 s1 = tail.index('</script>', s0)
 tail = tail[:s0] + '\n' + open(js, encoding='utf-8').read() + '\n' + tail[s1:]

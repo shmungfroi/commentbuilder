@@ -1,5 +1,37 @@
 # Changelog — Music Report Comment Builder
 
+## v5.4 — 17 Nov 2026
+
+**Statement bank: unchanged.** The data block is byte-identical. All changes are app logic and markup.
+
+### Added
+
+- **Student's instrument rule (Stage 5).** This enforces the bank's own `performanceInstrumentFilterRequired` rule.
+  - Performance statements can only be selected once the student's instrument is chosen. "Instrument" is the choice for generic wording.
+  - Until then the bank shows "Choose the student's instrument first", and an amber prompt explains why.
+  - The instrument now narrows **Performance statements only**, to that instrument plus generic ones. Composition, Listening and General statements stay visible.
+  - The checklist confirms that the Performance sentence matches the instrument. Changing the instrument afterwards flags the mismatch and disables Copy.
+- **Next student button.**
+  - It clears both comments, plus the tier, instrument, category and other per-student filters.
+  - It keeps the class context: Stage, Course, Stage Course, Comment Profile, Topic and Unit.
+
+### Fixed
+
+- **Stage 4 instrument chips.** Guitar, Voice and the other specific instruments led to an empty bank, because Stage 4 Performance statements are all generic. Those chips are now disabled in Stage 4.
+- **Reset Filters** now keeps the student's instrument. It is context, not a browsing filter.
+- **Choosing a non-Performance category** no longer silently clears the instrument.
+
+### Tests
+
+- 5 new tests: I01–I04 and N01.
+- Stage 5 tests now choose an instrument first.
+- X01 now confirms that a mismatched-instrument strategy is prevented, where before it was only warned.
+- 64/64 pass.
+
+### Proposed, not applied
+
+- `docs/PROPOSED_TEXT_CHANGES_v5.5.md` and `proposals/v5.5_text_changes.json` cover 2,407 statement-text changes in three separately approvable groups (A, B, C), awaiting approval.
+
 ## v5.3 — 17 Nov 2026
 
 **Statement bank: unchanged.** The data block is byte-for-byte identical to v5.1/v5.2.
