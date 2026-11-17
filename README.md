@@ -18,7 +18,7 @@ A standalone, offline, single-file web app for building Sentral-ready **Learning
 3. **Check the warnings.**
    - The ✔/✘ checklist must be all ✔ before **Copy** is enabled.
    - Amber ⚠ lines are reminders only (e.g. mixed topics, or a Strengths ↔ Strategies cross-check).
-4. **Character count.** It shows under each preview. **Stage 4 is fixed at 150 characters per box**, and its bank shows only the short sentence set, which always fits. For Stages 5 and 6, enter the verified Sentral limit in the **Sentral limit** box. It is remembered in your browser and blank by default.
+4. **Character count.** It shows under each preview. **Stage 4 is fixed at 150 characters per box**, and its bank shows only the short sentence set, which always fits. **Stage 5 Learning Strengths is fixed at 800.** For other boxes, enter the verified Sentral limit in the **Sentral limit** box. It is remembered in your browser and blank by default.
 5. **Copy** each output and paste it into Sentral.
 6. **Next student** clears both comments and the per-student filters, but keeps the class context.
 
@@ -58,7 +58,10 @@ python3 -I tools/verify_diff.py data/statement_bank_v5.1.json data/statement_ban
 ## Ground rules
 
 - **Statement text changes only with approval and a machine-readable diff.** Each build checks that the embedded bank matches the data file, and `tools/verify_diff.py` confirms only approved changes were made.
-- **Sentral character limits:** Stage 4 is 150 per comment box (confirmed). No limit is assumed for Stages 5 and 6 until confirmed.
+- **Sentral character limits** (set in `tools/set_sentral_limits.py`):
+  - Stage 4: 150 per comment box.
+  - Stage 5: Learning Strengths 800.
+  - Stage 5 Strategies and all of Stage 6: no limit assumed until confirmed.
 - See `docs/migration/GOVERNING_SPEC.md` for the governing specification.
 
 ## Not yet verified

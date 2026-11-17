@@ -22,7 +22,7 @@
   const COMMENT_PROFILES = DATA.metadata.commentProfiles || {}; // { "Stage 6 Performance": ["P","M","A"], ... }
   const CATEGORY_LABEL_OVERRIDES = DATA.metadata.categoryLabelOverrides || {};
 
-  const APP_VERSION = '5.6';
+  const APP_VERSION = '5.6.1';
   // v5.6: verified per-stage Sentral limits (metadata.sentralCharLimits)
   const STAGE_CHAR_LIMITS = (DATA.metadata.sentralCharLimits) || {};
   document.getElementById('data-status').textContent =
@@ -561,7 +561,7 @@
       if (state.filters.statementLength && s.statementLength !== state.filters.statementLength) return false;
       // v5.6: Stage 4 has a 150-character limit; only the short set can fit,
       // so long Stage 4 statements are hidden there (kept in the data file).
-      if (state.filters.stage === 'Stage 4' && presetLimit() && s.stage === 'Stage 4' && s.statementLength !== 'short') return false;
+      if (state.filters.stage === 'Stage 4' && presetLimit('learning_strength') && s.stage === 'Stage 4' && s.statementLength !== 'short') return false;
       // v5.4: the instrument narrows Performance statements only (to that
       // instrument plus generic "Instrument" ones); other categories stay visible.
       if (state.filters.instrument && s.category === 'P' && s.instrument){
@@ -883,12 +883,15 @@
   // v5.6: verified per-stage Sentral limits from the bank's metadata
   // (Stage 4 = 150 characters per comment box). These override the
   // browser-stored limit and cannot be edited in the app.
-  function presetLimit(){
+  // v5.6.1: a stage's limit may apply to both boxes (perOutput) or to one
+  // comment type (e.g. Stage 5 Learning Strengths = 800).
+  function presetLimit(commentType){
     const p = state.filters.stage && STAGE_CHAR_LIMITS[state.filters.stage];
-    return p && p.perOutput ? p.perOutput : null;
+    if (!p) return null;
+    return p.perOutput || (commentType && p[commentType]) || null;
   }
   function getCharLimit(commentType){
-    const preset = presetLimit();
+    const preset = presetLimit(commentType);
     if (preset) return preset;
     let v = null;
     try { v = window.localStorage.getItem(LIMIT_KEY[commentType]); } catch (e) { v = null; }
@@ -910,7 +913,7 @@
   function syncLimitInput(commentType){
     const input = document.getElementById(`charlimit-${BUILDER_PREFIX[commentType]}`);
     if (!input) return;
-    const preset = presetLimit();
+    const preset = presetLimit(commentType);
     if (preset){
       input.value = String(preset);
       input.disabled = true;
@@ -1238,7 +1241,7 @@
     if (limitInput){
       syncLimitInput(commentType);
       limitInput.addEventListener('input', () => {
-        if (presetLimit()) return;
+        if (presetLimit(commentType)) return;
         setCharLimit(commentType, limitInput.value);
         renderPreview(commentType);
       });

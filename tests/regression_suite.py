@@ -431,8 +431,9 @@ with sync_playwright() as p:
         page.locator(f'#bank-grid .card[data-id="{g["id"]}"] .swap-btn').nth(1).click()
         rec('L04', 'Longest General strategy swapped in', '<= 150, copyable', f'{len(preview("STI"))} chars copy={copy_on("STI")}', len(preview('STI')) <= 150 and copy_on('STI'))
         page.click('#filter-stage .chip[data-value="Stage 5"]')
-        inp = page.locator('#charlimit-LS')
-        rec('L05', 'Stage 5 limit field', 'editable, blank (no limit assumed)', f'value="{inp.input_value()}" disabled={inp.is_disabled()}', inp.input_value() == '' and not inp.is_disabled())
+        ls, st_ = page.locator('#charlimit-LS'), page.locator('#charlimit-STI')
+        rec('L05', 'Stage 5 limits', 'Strengths fixed at 800; Strategies editable and blank', f'LS="{ls.input_value()}" disabled={ls.is_disabled()}; STI="{st_.input_value()}" disabled={st_.is_disabled()}',
+            ls.input_value() == '800' and ls.is_disabled() and st_.input_value() == '' and not st_.is_disabled())
         import itertools
         worst = max(sum(len(x['text']) for x in combo) + 2 for ct in ('learning_strength', 'strategy_to_improve')
                     for combo in itertools.product(*[[x for x in short if x['commentType'] == ct and x['category'] == c] for c in 'PCL']))

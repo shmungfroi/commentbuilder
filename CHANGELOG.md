@@ -1,5 +1,14 @@
 # Changelog — Music Report Comment Builder
 
+## v5.6.1 — 17 Nov 2026
+
+- **Stage 5 Learning Strengths: Sentral limit 800 characters**, as confirmed by Justin.
+  - The limit is fixed in the app: the field shows 800 and can't be edited.
+  - Stage 5 Strengths comments run about 190–325 characters, so all of them fit.
+- **Stage 5 Strategies to Improve** still has no confirmed limit. Its field stays editable and blank.
+- **Limits can now apply to one comment type or to both boxes.** They are set by `tools/set_sentral_limits.py` in the bank metadata. The data version is `5.6.1`, with statements unchanged.
+- **Tests:** L05 is updated. 73/73 pass.
+
 ## v5.6 — 17 Nov 2026
 
 **Decisions (17 Nov 2026):** the Sentral limit is **150 characters per comment box** for **all of Stage 4** (Years 7 and 8). Comments stay three sentences, using a new short sentence set.
