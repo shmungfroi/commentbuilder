@@ -1,0 +1,341 @@
+{
+ "build": "v5.1",
+ "results": [
+  {
+   "id": "D01",
+   "case": "Load offline",
+   "expected": "3520 loaded, no JS errors",
+   "actual": "3520 statements loaded",
+   "passed": true
+  },
+  {
+   "id": "D02",
+   "case": "Embedded bank == statement_bank_v5.1.json",
+   "expected": "0 record changes",
+   "actual": "identical=True; changed records=0",
+   "passed": true
+  },
+  {
+   "id": "F1",
+   "case": "No Stage: try to mix Stage 4/6/5 in one comment",
+   "expected": "selection blocked; copy disabled",
+   "actual": "['ok', 'ok', 'ok']; copy=True",
+   "passed": false
+  },
+  {
+   "id": "F1b",
+   "case": "No Stage: on-screen guidance",
+   "expected": "notice explains Stage needed",
+   "actual": "(none)",
+   "passed": false
+  },
+  {
+   "id": "F2",
+   "case": "Stage 6, no Course/Level: try to mix M1/M2, Prelim/HSC",
+   "expected": "selection blocked; copy disabled",
+   "actual": "['ok', 'ok', 'ok']; copy=True",
+   "passed": false
+  },
+  {
+   "id": "F2b",
+   "case": "Stage 6, Course set but not Stage Course",
+   "expected": "still blocked",
+   "actual": "ok",
+   "passed": false
+  },
+  {
+   "id": "V03d",
+   "case": "Injected out-of-context record",
+   "expected": "context check fails",
+   "actual": "no test hook in this build",
+   "passed": null
+  },
+  {
+   "id": "S04",
+   "case": "Stage 4 Standard, unit Jazz, both outputs",
+   "expected": "P/C/L; unit filter exact; both copyable",
+   "actual": "labels=['1. Performance', '2. Composition', '3. Listening']; bank all Jazz=True (60); LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "C01",
+   "case": "Clipboard equals preview (Stage 4 STI)",
+   "expected": "identical",
+   "actual": "match=True",
+   "passed": true
+  },
+  {
+   "id": "Q1-unit",
+   "case": "Stage 4: three different units",
+   "expected": "allowed + amber warning",
+   "actual": "copy=True; warning=False",
+   "passed": false
+  },
+  {
+   "id": "Q1-unit2",
+   "case": "Stage 4: change Unit chip after selecting",
+   "expected": "selections kept (browse filter)",
+   "actual": "filled=[True, True, True]",
+   "passed": true
+  },
+  {
+   "id": "S05",
+   "case": "Stage 5 Standard, Guitar, both outputs",
+   "expected": "instrument filter exact; both copyable",
+   "actual": "bank all Guitar P=True (50); LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 1 Preliminary \u2014 Performance",
+   "expected": "P/M/A; no leaks; both copyable",
+   "actual": "360 shown, leaks=0, labels=Performance/Musicology/Aural, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 1 Preliminary \u2014 Composition",
+   "expected": "C/M/A; no leaks; both copyable",
+   "actual": "360 shown, leaks=0, labels=Composition/Musicology/Aural, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 1 Preliminary \u2014 Viva Voce",
+   "expected": "P/V/G; no leaks; both copyable",
+   "actual": "360 shown, leaks=0, labels=Performance/Viva Voce/General Musicianship, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 1 Preliminary \u2014 Musicianship",
+   "expected": "P/A/G; no leaks; both copyable",
+   "actual": "360 shown, leaks=0, labels=Performance/Aural/General Musicianship, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 1 Preliminary \u2014 Composition/Musicianship",
+   "expected": "C/A/G; no leaks; both copyable",
+   "actual": "360 shown, leaks=0, labels=Composition/Aural/General Musicianship, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 1 HSC \u2014 Performance",
+   "expected": "P/M/A; no leaks; both copyable",
+   "actual": "120 shown, leaks=0, labels=Performance/Musicology/Aural, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 1 HSC \u2014 Composition",
+   "expected": "C/M/A; no leaks; both copyable",
+   "actual": "120 shown, leaks=0, labels=Composition/Musicology/Aural, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 1 HSC \u2014 Viva Voce",
+   "expected": "P/V/G; no leaks; both copyable",
+   "actual": "120 shown, leaks=0, labels=Performance/Viva Voce/General Musicianship, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 1 HSC \u2014 Musicianship",
+   "expected": "P/A/G; no leaks; both copyable",
+   "actual": "120 shown, leaks=0, labels=Performance/Aural/General Musicianship, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 1 HSC \u2014 Composition/Musicianship",
+   "expected": "C/A/G; no leaks; both copyable",
+   "actual": "120 shown, leaks=0, labels=Composition/Aural/General Musicianship, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 2 Preliminary \u2014 Performance",
+   "expected": "P/M/A; no leaks; both copyable",
+   "actual": "480 shown, leaks=0, labels=Performance/Musicology/Aural, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 2 Preliminary \u2014 Composition",
+   "expected": "C/M/A; no leaks; both copyable",
+   "actual": "480 shown, leaks=0, labels=Composition/Musicology/Aural, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 2 Preliminary \u2014 Viva Voce",
+   "expected": "P/V/G; no leaks; both copyable",
+   "actual": "480 shown, leaks=0, labels=Performance/Viva Voce/General Musicianship, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 2 Preliminary \u2014 Musicianship",
+   "expected": "P/A/G; no leaks; both copyable",
+   "actual": "480 shown, leaks=0, labels=Performance/Aural/General Musicianship, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 2 Preliminary \u2014 Composition/Musicianship",
+   "expected": "C/A/G; no leaks; both copyable",
+   "actual": "480 shown, leaks=0, labels=Composition/Aural/General Musicianship, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 2 HSC \u2014 Performance",
+   "expected": "P/M/A; no leaks; both copyable",
+   "actual": "360 shown, leaks=0, labels=Performance/Musicology/Aural, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 2 HSC \u2014 Composition",
+   "expected": "C/M/A; no leaks; both copyable",
+   "actual": "360 shown, leaks=0, labels=Composition/Musicology/Aural, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 2 HSC \u2014 Viva Voce",
+   "expected": "P/V/G; no leaks; both copyable",
+   "actual": "360 shown, leaks=0, labels=Performance/Viva Voce/General Musicianship, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 2 HSC \u2014 Musicianship",
+   "expected": "P/A/G; no leaks; both copyable",
+   "actual": "360 shown, leaks=0, labels=Performance/Aural/General Musicianship, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 2 HSC \u2014 Composition/Musicianship",
+   "expected": "C/A/G; no leaks; both copyable",
+   "actual": "360 shown, leaks=0, labels=Composition/Aural/General Musicianship, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "Q1-topic",
+   "case": "Music 1 Prelim: three different topics",
+   "expected": "allowed + amber warning",
+   "actual": "copy=True; warning=False",
+   "passed": false
+  },
+  {
+   "id": "Q1-topic2",
+   "case": "Change Topic chip after selecting",
+   "expected": "selections kept",
+   "actual": "filled=[False, False, False]",
+   "passed": false
+  },
+  {
+   "id": "V03",
+   "case": "Change Course / Stage Course / Profile / Stage after selecting",
+   "expected": "all clear selections",
+   "actual": "course=[False, False, False] level=[False, False, False] profile=[False, False, False] stage=[False, False, False]",
+   "passed": true
+  },
+  {
+   "id": "V04",
+   "case": "Drop Strategy in Strengths; Composition in Performance zone",
+   "expected": "both rejected + explained",
+   "actual": "\"That is a \"Strategies to Improve\" statement \u2014 drop it in the Strategies to Improve builder.\" / \"That is a Composition statement \u2014 drop it in the Performance zone.\"",
+   "passed": true
+  },
+  {
+   "id": "V02",
+   "case": "Two of three slots",
+   "expected": "copy disabled",
+   "actual": "copy=False",
+   "passed": true
+  },
+  {
+   "id": "V01",
+   "case": "Three valid slots",
+   "expected": "copy enabled, all checks \u2714",
+   "actual": "copy=True; \u2718 count=0",
+   "passed": true
+  },
+  {
+   "id": "R01",
+   "case": "Reset Filters",
+   "expected": "selections and Stage kept",
+   "actual": "LS=[True, True, True] STI=[True, True, True] stage active=True",
+   "passed": true
+  },
+  {
+   "id": "R02",
+   "case": "Clear one output",
+   "expected": "other unaffected",
+   "actual": "LS=[False, False, False] STI=[True, True, True]",
+   "passed": true
+  },
+  {
+   "id": "V06",
+   "case": "Sentence counter edge cases",
+   "expected": "all counts correct",
+   "actual": "no test hook in this build",
+   "passed": null
+  },
+  {
+   "id": "V05",
+   "case": "Synthetic policy breaches",
+   "expected": "each rejected",
+   "actual": "no test hook in this build",
+   "passed": null
+  },
+  {
+   "id": "V07",
+   "case": "Character count / limit",
+   "expected": "visible + configurable",
+   "actual": "no character count in this build",
+   "passed": false
+  },
+  {
+   "id": "Q4",
+   "case": "Stage 4/5 General strategy usable",
+   "expected": "swap available",
+   "actual": "button: disabled:General \u2014 Work Ethic (not used by current profile)",
+   "passed": false
+  },
+  {
+   "id": "F5",
+   "case": "Stage 4/5 category chip for G",
+   "expected": "\"General\"",
+   "actual": "General Musicianship",
+   "passed": false
+  },
+  {
+   "id": "F6",
+   "case": "Click the active profile chip",
+   "expected": "stays selected",
+   "actual": "active=0",
+   "passed": false
+  },
+  {
+   "id": "A01",
+   "case": "Keyboard: focus Stage chip, Enter selects, Space deselects; aria-pressed",
+   "expected": "operable",
+   "actual": "{'tag': 'DIV', 'pressed': None}; keyboard ok=False",
+   "passed": false
+  },
+  {
+   "id": "E01",
+   "case": "JavaScript errors during whole run",
+   "expected": "none",
+   "actual": "none",
+   "passed": true
+  }
+ ]
+}

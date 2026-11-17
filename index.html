@@ -401,6 +401,36 @@
     color:#999;
     font-style:italic;
   }
+
+  /* ---- v5.2 additions ---- */
+  button.chip{font-family:inherit;line-height:1.2;}
+  .chip:focus-visible,.select-btn:focus-visible,.swap-btn:focus-visible,.actions button:focus-visible,#reset-filters:focus-visible,.dz-card .remove-btn:focus-visible,.char-row input:focus-visible{
+    outline:3px solid #F4B183;outline-offset:2px;
+  }
+  .context-notice{
+    font-size:0.8rem;background:#FFF4E5;border:1px solid #F4B183;color:#7a4a12;
+    border-radius:6px;padding:6px 10px;margin-bottom:8px;
+  }
+  .card.locked{cursor:default;}
+  .swap-caption{margin-top:8px;font-size:0.72rem;color:#4b3d80;font-weight:600;}
+  .swap-row{display:flex;gap:4px;margin-top:4px;flex-wrap:wrap;}
+  .swap-btn{
+    flex:1;padding:5px 4px;font-size:0.7rem;border-radius:6px;cursor:pointer;
+    border:1px solid var(--purple);background:#F1EDFA;color:#4b3d80;font-family:inherit;
+  }
+  .swap-btn:hover{background:var(--purple);color:#fff;}
+  .swap-note{
+    display:inline-block;font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.03em;
+    color:#4b3d80;background:#F1EDFA;border:1px solid var(--purple);border-radius:4px;padding:1px 6px;
+  }
+  .char-row{
+    display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;
+    font-size:0.78rem;color:#555;margin:-4px 0 10px 0;
+  }
+  .char-row .charcount.over{color:var(--red);font-weight:700;}
+  .char-row label{display:flex;align-items:center;gap:4px;}
+  .char-row input{width:72px;padding:2px 4px;font-size:0.78rem;font-family:inherit;border:1px solid #bbb;border-radius:4px;}
+  .validation li.warn{color:#9a5b00;}
 </style>
 </head>
 <body>
@@ -493,13 +523,14 @@
       <div class="chip-row" id="filter-instrument"></div>
     </details>
 
-    <button id="reset-filters">Reset Filters</button>
+    <button type="button" id="reset-filters">Reset Filters</button>
   </div>
 
   <!-- BANK PANEL -->
   <div class="panel">
     <h2>Statement Bank</h2>
     <div id="bank-count"></div>
+    <div id="context-notice" class="context-notice" role="status"></div>
     <div class="bank-grid" id="bank-grid"></div>
   </div>
 
@@ -526,7 +557,12 @@
         <div class="dz-content"><span class="dz-placeholder">Drag or select a statement.</span></div>
       </div>
 
-      <div class="preview-box" id="preview-LS">Select one statement for each category in the current profile.</div>
+      <div class="preview-box" id="preview-LS" aria-live="polite">Select one statement for each category in the current profile.</div>
+
+      <div class="char-row">
+        <span class="charcount" id="charcount-LS" aria-live="polite">0 characters</span>
+        <label for="charlimit-LS" title="Enter the verified Sentral limit for this field. Leave blank until confirmed.">Sentral limit <input type="number" min="1" step="1" inputmode="numeric" id="charlimit-LS" placeholder="not set"></label>
+      </div>
 
       <div class="actions">
         <button class="copy-btn" id="copy-LS" disabled>Copy Learning Strengths</button>
@@ -556,7 +592,12 @@
         <div class="dz-content"><span class="dz-placeholder">Drag or select a statement.</span></div>
       </div>
 
-      <div class="preview-box strategy" id="preview-STI">Select one statement for each category in the current profile.</div>
+      <div class="preview-box strategy" id="preview-STI" aria-live="polite">Select one statement for each category in the current profile.</div>
+
+      <div class="char-row">
+        <span class="charcount" id="charcount-STI" aria-live="polite">0 characters</span>
+        <label for="charlimit-STI" title="Enter the verified Sentral limit for this field. Leave blank until confirmed.">Sentral limit <input type="number" min="1" step="1" inputmode="numeric" id="charlimit-STI" placeholder="not set"></label>
+      </div>
 
       <div class="actions">
         <button class="copy-btn strategy" id="copy-STI" disabled>Copy Strategies to Improve</button>
@@ -122052,6 +122093,7 @@
 
 <script>
 
+
 (function(){
   "use strict";
 
@@ -122074,8 +122116,9 @@
   const COMMENT_PROFILES = DATA.metadata.commentProfiles || {}; // { "Stage 6 Performance": ["P","M","A"], ... }
   const CATEGORY_LABEL_OVERRIDES = DATA.metadata.categoryLabelOverrides || {};
 
+  const APP_VERSION = '5.2';
   document.getElementById('data-status').textContent =
-    `${statements.length} statements loaded`;
+    `${statements.length} statements loaded · app v${APP_VERSION} · data ${DATA.metadata.version}`;
 
   // ---------- Constants ----------
   const CAT_LABELS = CATEGORIES;
@@ -122142,7 +122185,11 @@
     return { name: STANDARD_PROFILE_NAME, categories, labels };
   }
 
+  // v5.2: In Stage 4/5 the code "G" means General (work ethic, behaviour,
+  // organisation, practice), not Stage 6 "General Musicianship".
+  const STAGE45_G_LABEL = 'General';
   function categoryLabelForProfile(profile, cat){
+    if (profile.name === STANDARD_PROFILE_NAME && cat === 'G') return STAGE45_G_LABEL;
     return profile.labels[cat] || CAT_LABELS[cat] || cat;
   }
 
@@ -122194,12 +122241,17 @@
   }
 
   // ---------- Build filter chips ----------
+  const NO_DESELECT = new Set(['commentProfile']);
   function buildChipRow(containerId, values, filterKey, getLabel, extraClass, onChange){
     const container = document.getElementById(containerId);
     container.innerHTML = '';
+    container.setAttribute('role', 'group');
     values.forEach(val => {
-      const chip = document.createElement('div');
+      // v5.2: real buttons so chips are keyboard- and screen-reader-operable.
+      const chip = document.createElement('button');
+      chip.type = 'button';
       chip.className = 'chip';
+      chip.setAttribute('aria-pressed', String(state.filters[filterKey] === val));
       if (extraClass){
         const cls = extraClass(val);
         if (cls) chip.classList.add(cls);
@@ -122208,6 +122260,9 @@
       chip.dataset.value = val;
       chip.addEventListener('click', () => {
         if (state.filters[filterKey] === val){
+          // v5.2: the active Stage 6 comment profile cannot be switched off
+          // (a default profile would otherwise stay in force invisibly).
+          if (NO_DESELECT.has(filterKey)) return;
           state.filters[filterKey] = null;
         } else {
           state.filters[filterKey] = val;
@@ -122218,6 +122273,7 @@
         if (onChange) onChange(val);
         renderFilters();
         renderBank();
+        refreshBuilders();
       });
       container.appendChild(chip);
     });
@@ -122284,14 +122340,10 @@
   function rebuildStage6TopicChips(){
     const topics = state.filters.stage === 'Stage 6' ? availableStage6Topics() : TOPICS;
     syncStage6TopicFilter();
-    buildChipRow('filter-topic', topics, 'topic',
-      v => v,
-      null,
-      () => {
-        // Topic changes alter the statement context, so clear selections
-        // rather than leaving mismatched comments in the preview.
-        clearAllSelections();
-      });
+    // v5.2: Topic is a browsing refinement. Mixed topics inside one comment
+    // are allowed but flagged with an amber warning in validation, so a
+    // topic change no longer wipes the builders.
+    buildChipRow('filter-topic', topics, 'topic', v => v, null, null);
   }
 
   function stage6ContextChanged(){
@@ -122427,6 +122479,14 @@
       chip.classList.toggle('disabled', instrumentDisabled);
     });
     document.getElementById('instrument-group').style.opacity = instrumentDisabled ? '0.45' : '1';
+
+    // v5.2: keep assistive-technology state in step with the visual state.
+    document.querySelectorAll('#filter-panel .chip').forEach(chip => {
+      chip.setAttribute('aria-pressed', String(chip.classList.contains('active')));
+      if (chip.classList.contains('disabled')) chip.setAttribute('aria-disabled', 'true');
+      else chip.removeAttribute('aria-disabled');
+    });
+    renderContextNotice();
   }
 
   buildChipRow('filter-stage', TOP_LEVEL_STAGES, 'stage', null, null, onStageChange);
@@ -122438,7 +122498,8 @@
     () => renderFilters());
   // Category chips are rebuilt dynamically by rebuildCategoryChips(); seed
   // with the Stage 4/5 standard set initially.
-  buildChipRow('filter-category', ['P','C','L','G'], 'category', v => CAT_LABELS[v],
+  buildChipRow('filter-category', ['P','C','L','G'], 'category',
+    v => v === 'G' ? STAGE45_G_LABEL : CAT_LABELS[v],
     v => v === 'G' ? 'chip-general' : '',
     () => renderFilters());
   buildChipRow('filter-tier', TIERS, 'tier');
@@ -122473,7 +122534,66 @@
     rebuildCategoryChips();
     renderFilters();
     renderBank();
+    refreshBuilders();
   });
+
+  // ---------- v5.2 Context lock & placement rules ----------
+  // Reporting context must be fully chosen before anything can be placed,
+  // so one comment can never mix stages, courses or Preliminary/HSC.
+  function contextBlocker(){
+    if (!state.filters.stage) return 'Choose a Stage first';
+    if (state.filters.stage === 'Stage 6' && (!state.filters.course || !state.filters.stageCourse)){
+      return 'Choose Course and Stage Course first';
+    }
+    return null;
+  }
+
+  function renderContextNotice(){
+    const el = document.getElementById('context-notice');
+    if (!el) return;
+    const block = contextBlocker();
+    el.textContent = block ? `${block} — statements can be browsed but not selected until the reporting context is set.` : '';
+    el.style.display = block ? '' : 'none';
+  }
+
+  // Stage 4/5 only: a General strategy may stand in for one of P/C/L in the
+  // Strategies to Improve builder (at most one per comment).
+  function isGeneralSwap(s){
+    return state.filters.stage !== 'Stage 6' && s.category === 'G' && s.commentType === 'strategy_to_improve';
+  }
+
+  // Returns null if statement s may occupy slot idx of its builder under the
+  // current context; otherwise a plain-English reason.
+  function placementProblem(s, idx){
+    const block = contextBlocker();
+    if (block) return block + '.';
+    if (s.stage !== state.filters.stage){
+      return `That is a ${s.stage} statement; the current Stage is ${state.filters.stage}.`;
+    }
+    if (state.filters.stage === 'Stage 6'){
+      if (s.course !== state.filters.course){
+        return `That is a ${s.course} statement; the current Course is ${state.filters.course}.`;
+      }
+      if (s.stageCourse !== state.filters.stageCourse){
+        return `That is a ${s.stageCourse} statement; the current Stage Course is ${state.filters.stageCourse}.`;
+      }
+    }
+    const profile = getActiveProfile();
+    if (idx < 0 || idx > 2) return 'That category is not used by the current profile.';
+    const expected = profile.categories[idx];
+    if (s.category === expected) return null;
+    if (isGeneralSwap(s)){
+      const other = state.selected[s.commentType].findIndex((sl, i) => i !== idx && sl && sl.statement.category === 'G');
+      if (other !== -1){
+        return `Only one General strategy per comment — remove the one in slot ${other + 1} first.`;
+      }
+      return null;
+    }
+    const expectedLabel = categoryLabelForProfile(profile, expected);
+    const actualLabel = categoryLabelForProfile(profile, s.category);
+    const article = /^[aeiou]/i.test(actualLabel) ? 'an' : 'a';
+    return `That is ${article} ${actualLabel} statement — drop it in the ${expectedLabel} zone.`;
+  }
 
   // ---------- Bank rendering ----------
   function getFiltered(){
@@ -122561,14 +122681,42 @@
       card.appendChild(p);
 
       const btn = document.createElement('button');
+      btn.type = 'button';
       const isStrategy = s.commentType === 'strategy_to_improve';
       const isGeneral = s.category === 'G';
       btn.className = 'select-btn' + (isStrategy ? ' strategy-btn' : '') + (isGeneral ? ' general-btn' : '');
 
       const profile = getActiveProfile();
       const slotIndex = profile.categories.indexOf(s.category);
+      const block = contextBlocker();
 
-      if (slotIndex === -1){
+      if (block){
+        // v5.2: context lock — browsing allowed, selecting not.
+        btn.textContent = block;
+        btn.disabled = true;
+        card.draggable = false;
+        card.classList.add('locked');
+      } else if (slotIndex === -1 && isGeneralSwap(s)){
+        // v5.2: Stage 4/5 General strategy — choose which slot it replaces.
+        btn.dataset.skip = '1';
+        const cap = document.createElement('div');
+        cap.className = 'swap-caption';
+        cap.textContent = 'Strategies to Improve — use in place of:';
+        card.appendChild(cap);
+        const row = document.createElement('div');
+        row.className = 'swap-row';
+        profile.categories.forEach((cat, idx) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'swap-btn';
+          const lbl = categoryLabelForProfile(profile, cat);
+          b.textContent = `Replace ${lbl}`;
+          b.setAttribute('aria-label', `Use this General strategy in place of ${lbl} in Strategies to Improve`);
+          b.addEventListener('click', () => selectStatement(s, idx));
+          row.appendChild(b);
+        });
+        card.appendChild(row);
+      } else if (slotIndex === -1){
         // This statement's category isn't part of the active profile, so it
         // can't be placed in either builder right now.
         if (isGeneral){
@@ -122586,7 +122734,7 @@
           : `Select for ${COMMENT_TYPES[s.commentType]} — ${label}`;
         btn.addEventListener('click', () => selectStatement(s));
       }
-      card.appendChild(btn);
+      if (!btn.dataset.skip) card.appendChild(btn);
 
       card.addEventListener('dragstart', e => {
         e.dataTransfer.setData('text/plain', s.id);
@@ -122607,10 +122755,16 @@
     return profile.categories.indexOf(category);
   }
 
-  function selectStatement(s){
-    const idx = slotIndexForCategory(s.category);
-    if (idx === -1) return; // category not part of active profile
-    state.selected[s.commentType][idx] = { statement: s, category: s.category };
+  // v5.2: every placement path (button, swap button, drag-and-drop) goes
+  // through placementProblem(), so nothing out of context can be placed.
+  function selectStatement(s, slotIdx){
+    const idx = (typeof slotIdx === 'number') ? slotIdx : slotIndexForCategory(s.category);
+    const problem = placementProblem(s, idx);
+    if (problem){
+      showCopyMsg(s.commentType, problem, true);
+      return false;
+    }
+    state.selected[s.commentType][idx] = { statement: s, category: s.category, swap: s.category !== getActiveProfile().categories[idx] };
     renderDropzones(s.commentType);
     renderPreview(s.commentType);
     renderReview();
@@ -122646,6 +122800,9 @@
         const label = categoryLabelForProfile(profile, cat);
         const labelEl = document.getElementById(`dz-label-${prefix}-${slotNum}`);
         labelEl.textContent = `${slotNum}. ${label}`;
+        const dz = document.getElementById(`dz-${prefix}-${slotNum}`);
+        dz.setAttribute('role', 'region');
+        dz.setAttribute('aria-label', `${COMMENT_TYPES[commentType]}, slot ${slotNum}: ${label}`);
       });
       const profileLabelEl = document.getElementById(`profile-label-${prefix}`);
       if (state.filters.stage === 'Stage 6'){
@@ -122678,6 +122835,16 @@
         removeBtn.title = 'Remove';
         removeBtn.addEventListener('click', () => clearSelectionCell(commentType, idx));
         cardDiv.appendChild(removeBtn);
+
+        removeBtn.type = 'button';
+        removeBtn.setAttribute('aria-label', `Remove statement from slot ${slotNum}`);
+
+        if (sel.swap){
+          const note = document.createElement('div');
+          note.className = 'swap-note';
+          note.textContent = `General — in place of ${categoryLabelForProfile(profile, cat)}`;
+          cardDiv.appendChild(note);
+        }
 
         const textNode = document.createElement('div');
         textNode.style.marginTop = '4px';
@@ -122729,31 +122896,69 @@
         const s = statements.find(st => st.id === id);
         if (!s) return;
 
-        const profile = getActiveProfile();
-        const expectedCat = profile.categories[idx];
-
         if (s.commentType !== commentType){
           showCopyMsg(commentType,
             `That is a "${COMMENT_TYPES[s.commentType]}" statement — drop it in the ${COMMENT_TYPES[s.commentType]} builder.`,
             true);
           return;
         }
-        if (s.category !== expectedCat){
-          const expectedLabel = categoryLabelForProfile(profile, expectedCat);
-          const actualLabel = categoryLabelForProfile(profile, s.category);
-          const article = /^[aeiou]/i.test(actualLabel) ? 'an' : 'a';
-          showCopyMsg(commentType,
-            `That is ${article} ${actualLabel} statement — drop it in the ${expectedLabel} zone.`,
-            true);
-          return;
-        }
-        selectStatement(s);
+        // Context, category and General-swap rules are all in placementProblem().
+        selectStatement(s, idx);
       });
     });
   });
 
   // ---------- Preview & validation ----------
-  const PRONOUNS = /\b(he|she|they|his|her|their|him|hers|theirs|himself|herself|themselves)\b/i;
+  const PRONOUNS = /\b(he|she|they|his|her|their|him|them|hers|theirs|himself|herself|themselves|themself)\b/i;
+  const FIRST_SECOND_PERSON = /\b(I|me|my|mine|myself|we|us|our|ours|ourselves|you|your|yours|yourself)\b/;
+
+  // v5.2: sentence counter that copes with ? and !, closing quotes or
+  // brackets, common abbreviations and decimals. It is a backstop only:
+  // comment text comes from the bank, which is one sentence per record.
+  const ABBREVIATIONS = /\b(e\.g|i\.e|etc|vs|approx|cf|Mr|Mrs|Ms|Dr|St|No)\./gi;
+  function countSentences(text){
+    const masked = text
+      .replace(ABBREVIATIONS, m => m.replace(/\./g, '§'))
+      .replace(/(\d)\.(\d)/g, '$1§$2');
+    return (masked.match(/[.!?]+["'”’)]*(?=\s|$)/g) || []).length;
+  }
+
+  // ---------- v5.2 Character limits (per output, stored in this browser) ----------
+  // No Sentral limit is assumed. A limit applies only once the user enters
+  // a verified figure; until then the live count is informational.
+  const LIMIT_KEY = { learning_strength: 'rbscCommentBuilder.charLimit.LS', strategy_to_improve: 'rbscCommentBuilder.charLimit.STI' };
+  function getCharLimit(commentType){
+    let v = null;
+    try { v = window.localStorage.getItem(LIMIT_KEY[commentType]); } catch (e) { v = null; }
+    if (v === null || v === undefined) v = charLimitMemory[commentType];
+    const n = parseInt(v, 10);
+    return Number.isFinite(n) && n > 0 ? n : null;
+  }
+  const charLimitMemory = { learning_strength: null, strategy_to_improve: null };
+  function setCharLimit(commentType, raw){
+    const n = parseInt(raw, 10);
+    const val = Number.isFinite(n) && n > 0 ? String(n) : null;
+    charLimitMemory[commentType] = val;
+    try {
+      if (val) window.localStorage.setItem(LIMIT_KEY[commentType], val);
+      else window.localStorage.removeItem(LIMIT_KEY[commentType]);
+    } catch (e) { /* storage unavailable: keep in memory for this session */ }
+  }
+
+  function renderCharCount(commentType, comment){
+    const prefix = BUILDER_PREFIX[commentType];
+    const el = document.getElementById(`charcount-${prefix}`);
+    if (!el) return;
+    const n = comment ? comment.length : partialText(commentType).length;
+    const limit = getCharLimit(commentType);
+    const label = comment ? `${n} characters` : `${n} characters so far`;
+    el.textContent = limit ? `${label} / limit ${limit}` : `${label} (no limit set)`;
+    el.classList.toggle('over', !!(limit && n > limit));
+  }
+
+  function partialText(commentType){
+    return state.selected[commentType].filter(Boolean).map(getStatementText).join(' ');
+  }
 
   function buildComment(commentType){
     const sel = state.selected[commentType];
@@ -122776,7 +122981,90 @@
       box.textContent = comment;
     }
 
+    renderCharCount(commentType, comment);
     renderValidation(commentType, comment);
+  }
+
+  // v5.2: validation re-checks every selected record against the CURRENT
+  // reporting context, so stale or out-of-context text can never be copied,
+  // whatever path put it there.
+  function validateComment(commentType){
+    const comment = buildComment(commentType);
+    const sel = state.selected[commentType];
+    const profile = getActiveProfile();
+    const catLabels = profile.categories.map(c => categoryLabelForProfile(profile, c));
+    const checks = [];   // blocking
+    const warnings = []; // amber, non-blocking
+
+    const swapAllowed = state.filters.stage !== 'Stage 6' && commentType === 'strategy_to_improve';
+    checks.push({
+      label: `One ${catLabels[0]}, one ${catLabels[1]} and one ${catLabels[2]} ${COMMENT_TYPES[commentType]} statement selected` +
+        (swapAllowed ? ' (General may replace one)' : ''),
+      pass: sel.every(slot => !!slot)
+    });
+    if (!comment) return { comment, checks, warnings, allPass: false };
+
+    // Context: stage, course, stage course
+    const ctxProblems = [];
+    sel.forEach((slot, i) => {
+      const s = slot.statement;
+      if (s.stage !== state.filters.stage) ctxProblems.push(`slot ${i + 1} is ${s.stage}`);
+      if (state.filters.stage === 'Stage 6'){
+        if (s.course !== state.filters.course) ctxProblems.push(`slot ${i + 1} is ${s.course || 'no course'}`);
+        if (s.stageCourse !== state.filters.stageCourse) ctxProblems.push(`slot ${i + 1} is ${s.stageCourse || 'no stage course'}`);
+      }
+    });
+    const ctxLabel = state.filters.stage === 'Stage 6'
+      ? `${state.filters.stage}, ${state.filters.course || '—'} ${state.filters.stageCourse || '—'}`
+      : (state.filters.stage || 'no Stage chosen');
+    checks.push({
+      label: `All statements match the reporting context (${ctxLabel})` + (ctxProblems.length ? ` — ${ctxProblems.join('; ')}` : ''),
+      pass: !!state.filters.stage && !contextBlocker() && ctxProblems.length === 0
+    });
+
+    // Slot / type integrity
+    const slotProblems = [];
+    let generalCount = 0;
+    sel.forEach((slot, i) => {
+      const s = slot.statement;
+      if (s.commentType !== commentType) slotProblems.push(`slot ${i + 1} is a ${COMMENT_TYPES[s.commentType]} statement`);
+      if (s.category === profile.categories[i]) return;
+      if (swapAllowed && s.category === 'G'){ generalCount++; return; }
+      slotProblems.push(`slot ${i + 1} holds ${categoryLabelForProfile(profile, s.category)}, expected ${catLabels[i]}`);
+    });
+    if (generalCount > 1) slotProblems.push('more than one General strategy');
+    checks.push({
+      label: 'Each statement is in the correct slot and builder' + (slotProblems.length ? ` — ${slotProblems.join('; ')}` : ''),
+      pass: slotProblems.length === 0
+    });
+
+    const texts = sel.map(slot => slot.statement.text);
+    checks.push({ label: 'No statement repeated', pass: new Set(texts).size === texts.length });
+
+    const sentenceCount = countSentences(comment);
+    checks.push({ label: `Exactly three sentences (found ${sentenceCount})`, pass: sentenceCount === 3 });
+
+    checks.push({ label: 'No third-person pronouns (he/she/they/his/her/their/them, etc.)', pass: !PRONOUNS.test(comment) });
+    checks.push({ label: 'No first- or second-person words (I/my/we/our/you/your)', pass: !FIRST_SECOND_PERSON.test(comment) });
+    checks.push({ label: 'Does not contain the phrase "the student"', pass: !/\bthe student\b/i.test(comment) });
+    checks.push({ label: 'Comment ends with a full stop', pass: comment.trim().endsWith('.') });
+
+    const limit = getCharLimit(commentType);
+    if (limit){
+      checks.push({ label: `Within the character limit (${comment.length} / ${limit})`, pass: comment.length <= limit });
+    }
+
+    // Amber warnings (allowed, but worth a second look)
+    if (state.filters.stage === 'Stage 6'){
+      const topics = [...new Set(sel.map(slot => slot.statement.topic).filter(Boolean))];
+      if (topics.length > 1) warnings.push(`Mixed topics in one comment: ${topics.join(', ')}`);
+    }
+    if (state.filters.stage === 'Stage 4'){
+      const units = [...new Set(sel.map(slot => slot.statement.unit).filter(Boolean))];
+      if (units.length > 1) warnings.push(`Mixed units in one comment: ${units.join(', ')}`);
+    }
+
+    return { comment, checks, warnings, allPass: checks.every(c => c.pass) };
   }
 
   function renderValidation(commentType, comment){
@@ -122790,53 +123078,23 @@
       return;
     }
 
-    const sel = state.selected[commentType];
-    const profile = getActiveProfile();
-    const catLabels = profile.categories.map(c => categoryLabelForProfile(profile, c));
-    const checks = [];
-
-    const allSelected = sel.every(slot => !!slot);
-    checks.push({
-      label: `Exactly one ${catLabels[0]}, one ${catLabels[1]} and one ${catLabels[2]} ${COMMENT_TYPES[commentType]} statement selected`,
-      pass: allSelected
-    });
-
-    const sentenceCount = (comment.match(/\.\s*(?=[A-Z]|$)/g) || []).length;
-    checks.push({
-      label: `Final comment has exactly three sentences (found ${sentenceCount})`,
-      pass: sentenceCount === 3
-    });
-
-    const hasPronoun = PRONOUNS.test(comment);
-    checks.push({
-      label: 'No pronouns (he/she/they/his/her/their, etc.)',
-      pass: !hasPronoun
-    });
-
-    const hasStudentPhrase = /\bthe student\b/i.test(comment);
-    checks.push({
-      label: 'Does not contain the phrase "the student"',
-      pass: !hasStudentPhrase
-    });
-
-    const endsWithPeriod = comment.trim().endsWith('.');
-    checks.push({
-      label: 'Comment ends with a period',
-      pass: endsWithPeriod
-    });
-
+    const result = validateComment(commentType);
     const ul = document.createElement('ul');
-    let allPass = true;
-    checks.forEach(chk => {
+    result.checks.forEach(chk => {
       const li = document.createElement('li');
       li.className = chk.pass ? 'ok' : 'fail';
       li.textContent = (chk.pass ? '✔ ' : '✘ ') + chk.label;
-      if (!chk.pass) allPass = false;
+      ul.appendChild(li);
+    });
+    result.warnings.forEach(w => {
+      const li = document.createElement('li');
+      li.className = 'warn';
+      li.textContent = '⚠ ' + w + ' (allowed — check this is intended)';
       ul.appendChild(li);
     });
     container.appendChild(ul);
 
-    copyBtn.disabled = !allPass;
+    copyBtn.disabled = !result.allPass;
   }
 
   // ---------- Review / tone-check panel ----------
@@ -122866,6 +123124,12 @@
   function copyComment(commentType){
     const comment = buildComment(commentType);
     if (!comment) return;
+    // v5.2: re-validate at the moment of copying, not only when rendering.
+    if (!validateComment(commentType).allPass){
+      showCopyMsg(commentType, 'Not copied — fix the items marked ✘ first.', true);
+      renderPreview(commentType);
+      return;
+    }
     const label = COMMENT_TYPES[commentType];
     navigator.clipboard.writeText(comment).then(() => {
       showCopyMsg(commentType, `${label} copied to clipboard — ready to paste into Sentral.`);
@@ -122880,23 +123144,41 @@
     });
   }
 
+  // v5.2: validation depends on the current context, so re-run it whenever
+  // a filter changes.
+  function refreshBuilders(){
+    COMMENT_TYPE_ORDER.forEach(ct => renderPreview(ct));
+  }
+
   // ---------- Buttons ----------
   COMMENT_TYPE_ORDER.forEach(commentType => {
     const prefix = BUILDER_PREFIX[commentType];
     document.getElementById(`copy-${prefix}`).addEventListener('click', () => copyComment(commentType));
     document.getElementById(`clear-${prefix}`).addEventListener('click', () => clearBuilder(commentType));
+    const limitInput = document.getElementById(`charlimit-${prefix}`);
+    if (limitInput){
+      const current = getCharLimit(commentType);
+      limitInput.value = current ? String(current) : '';
+      limitInput.addEventListener('input', () => {
+        setCharLimit(commentType, limitInput.value);
+        renderPreview(commentType);
+      });
+    }
   });
 
   // ---------- Init ----------
   renderFilters();
   renderDropzoneLabels();
   renderBank();
+  // Expose read-only hooks for automated regression tests (no UI effect).
+  window.__commentBuilderTest = { countSentences, validateComment, state, APP_VERSION };
   COMMENT_TYPE_ORDER.forEach(commentType => {
     renderDropzones(commentType);
     renderPreview(commentType);
   });
   renderReview();
 })();
+
 </script>
 
 </body>
