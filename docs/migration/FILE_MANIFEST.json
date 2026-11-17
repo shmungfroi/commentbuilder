@@ -1,0 +1,26 @@
+{
+  "CLAUDE_START_HERE.md": {
+    "bytes": 2094,
+    "sha256": "a25fe7e17505489d6e454665a029ff7d43850220508d6d84290bcfae9cc19a7a"
+  },
+  "GOVERNING_SPEC.md": {
+    "bytes": 4005,
+    "sha256": "ab019cf07349b22e1fb62445d22e93ec6706fac3a13afd9d7b5be72597fb9ae0"
+  },
+  "Music_Report_Comment_Builder_v5.1_ORIGINAL.html": {
+    "bytes": 3719039,
+    "sha256": "d44df8bb641bf2449ec647dc3b27de5f9740a4aa4c898b3afbe4b8d98f7b4817"
+  },
+  "TECHNICAL_AUDIT.md": {
+    "bytes": 2022,
+    "sha256": "53681cfd4627ecf929dc2dad11ce5ee86c37ffec0f2376c84836062c0109eb88"
+  },
+  "TEST_PLAN.md": {
+    "bytes": 2013,
+    "sha256": "c13d40f659849d348b6d03bb35d08ca770695298b76282e23b62dfb8295f8062"
+  },
+  "statement_bank_v5.1.json": {
+    "bytes": 3669072,
+    "sha256": "ea3be673a42bee16d2215e44accff6c92a47c319248b2709776b1b97ffcd837f"
+  }
+}
