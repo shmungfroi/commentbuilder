@@ -1,6 +1,6 @@
-"""Build v5.2 from the untouched v5.1 original. The embedded statement data is
+"""Build v5.3 from the untouched v5.1 original. The embedded statement data is
 copied byte-for-byte; only CSS, three small HTML hooks and the app script change.
-Usage: python3 -I build_v52.py <original.html> <app_v52.js> <out.html>"""
+Usage: python3 -I build_v53.py <original.html> <app_v53.js> <out.html>"""
 import sys, hashlib
 
 src, js, out = sys.argv[1:4]
@@ -46,6 +46,11 @@ CSS = """
   .char-row label{display:flex;align-items:center;gap:4px;}
   .char-row input{width:72px;padding:2px 4px;font-size:0.78rem;font-family:inherit;border:1px solid #bbb;border-radius:4px;}
   .validation li.warn{color:#9a5b00;}
+  /* ---- v5.3 cross-check ---- */
+  .review-text.crosscheck-warn{background:#FFF4E5;border-color:#F4B183;color:#7a4a12;}
+  .review-text.crosscheck-ok{background:#EEF7EA;border-color:#B5D6A7;color:#2e5d1f;}
+  .review-text ul{margin:0 0 0 16px;padding:0;}
+  .crosscheck-note{margin-top:6px;font-size:0.78rem;font-style:italic;}
 </style>"""
 
 def char_row(prefix):
@@ -62,6 +67,10 @@ head = rep(head, '<div class="preview-box" id="preview-LS">Select one statement 
            '<div class="preview-box" id="preview-LS" aria-live="polite">Select one statement for each category in the current profile.</div>\n' + char_row('LS'))
 head = rep(head, '<div class="preview-box strategy" id="preview-STI">Select one statement for each category in the current profile.</div>\n',
            '<div class="preview-box strategy" id="preview-STI" aria-live="polite">Select one statement for each category in the current profile.</div>\n' + char_row('STI'))
+head = rep(head, '<h3 class="strategy">Strategies to Improve</h3>\n        <div class="review-text empty" id="review-STI">Not yet complete.</div>\n      </div>',
+           '<h3 class="strategy">Strategies to Improve</h3>\n        <div class="review-text empty" id="review-STI">Not yet complete.</div>\n      </div>\n'
+           '      <div class="review-block">\n        <h3>Strengths ↔ Strategies cross-check</h3>\n'
+           '        <div class="review-text empty" id="crosscheck" aria-live="polite">Shown once both outputs have at least one statement.</div>\n      </div>')
 head = rep(head, '<button id="reset-filters">', '<button type="button" id="reset-filters">')
 
 s0 = tail.index('<script>') + len('<script>')

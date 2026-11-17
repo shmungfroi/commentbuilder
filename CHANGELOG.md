@@ -1,5 +1,35 @@
 # Changelog — Music Report Comment Builder
 
+## v5.3 — 17 Nov 2026
+
+**Statement bank: unchanged.** The data block is byte-for-byte identical to v5.1/v5.2.
+
+### Added
+
+**Strengths ↔ Strategies cross-check**, agreed 17 Nov 2026.
+
+These are reminders only: amber, never blocking Copy. They appear in two places:
+- in each builder's checklist, as "Cross-check with …";
+- in a new **Strengths ↔ Strategies cross-check** block in the Review & Tone Check panel.
+
+The panel waits until both outputs have at least one statement. It then flags:
+
+- **Instrument:** the Performance slots name different instruments (e.g. a Guitar strength with a Voice strategy). The generic "Instrument" counts as compatible with any instrument.
+- **Topic (Stage 6) / Unit (Stage 4):** a topic or unit is used in one output but not the other.
+- **Tier gap:** the same slot is two or more tiers apart between outputs (e.g. an Extensive Performance strength with an Elementary Performance strategy).
+  - A one-level gap is not flagged.
+  - A General strategy swapped into a slot is not compared, because it is a different category.
+
+When nothing is flagged, the panel shows a green "no inconsistencies" line.
+
+### Changed
+
+- Both builders' checklists now refresh when either output changes, because the cross-check depends on both.
+
+### Tests
+
+- 7 new tests (X01–X07). v5.3 passes all 59.
+
 ## v5.2 — 17 Nov 2026
 
 **Statement bank: unchanged.** All 3,520 records are identical to v5.1 (`5.1-fixed-stage6`), and the embedded data block is byte-for-byte the same. App logic, CSS and four small HTML hooks were changed. There is no backend, no accounts, no network calls and no student data.
@@ -65,7 +95,7 @@
 
 - The Sentral character limit for each field is still to be confirmed. Enter it in the app once known.
 - Sentral paste of the en dash in "1600–1900" has not been tested.
-- Strengths and Strategies are not cross-checked against each other (e.g. Guitar strength with a Voice strategy). This is still open as a design question.
+- *(Resolved in v5.3: Strengths ↔ Strategies cross-check.)*
 - Only Chrome was tested. Netlify deployment and mobile browsers have not been verified.
 - In the data, 33 Stage 6/Stage 4 strategy sentences repeat word-for-word across tiers. About 79% of topic-tagged Stage 6 records do not name their topic in the text. Both are reported in `AUDIT_REPORT_v5.1.md` and were deliberately left untouched.
 

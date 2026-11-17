@@ -22,7 +22,7 @@
   const COMMENT_PROFILES = DATA.metadata.commentProfiles || {}; // { "Stage 6 Performance": ["P","M","A"], ... }
   const CATEGORY_LABEL_OVERRIDES = DATA.metadata.categoryLabelOverrides || {};
 
-  const APP_VERSION = '5.2';
+  const APP_VERSION = '5.3';
   document.getElementById('data-status').textContent =
     `${statements.length} statements loaded · app v${APP_VERSION} · data ${DATA.metadata.version}`;
 
@@ -960,6 +960,9 @@
       checks.push({ label: `Within the character limit (${comment.length} / ${limit})`, pass: comment.length <= limit });
     }
 
+    // v5.3: Strengths <-> Strategies cross-check reminders (non-blocking)
+    crossCheckWarnings().forEach(w => warnings.push(`Cross-check with ${COMMENT_TYPES[otherType(commentType)]}: ${w}`));
+
     // Amber warnings (allowed, but worth a second look)
     if (state.filters.stage === 'Stage 6'){
       const topics = [...new Set(sel.map(slot => slot.statement.topic).filter(Boolean))];
@@ -1004,7 +1007,85 @@
   }
 
   // ---------- Review / tone-check panel ----------
+  // ---------- v5.3 Strengths <-> Strategies cross-check ----------
+  // Reminders only: compares the two outputs for the same student and flags
+  // likely inconsistencies. Never blocks copying.
+  function otherType(commentType){
+    return commentType === 'learning_strength' ? 'strategy_to_improve' : 'learning_strength';
+  }
+
+  function crossCheckWarnings(){
+    const ls = state.selected.learning_strength;
+    const sti = state.selected.strategy_to_improve;
+    if (!ls.some(Boolean) || !sti.some(Boolean)) return [];
+    const out = [];
+    const profile = getActiveProfile();
+
+    // Instrument: compare the Performance slots. The generic "Instrument"
+    // value is compatible with any specific instrument.
+    const pIdx = profile.categories.indexOf('P');
+    if (pIdx !== -1 && ls[pIdx] && sti[pIdx]){
+      const a = ls[pIdx].statement.instrument, b = sti[pIdx].statement.instrument;
+      if (a && b && a !== b && a !== 'Instrument' && b !== 'Instrument'){
+        out.push(`Performance instrument differs (Strengths: ${a}; Strategies: ${b})`);
+      }
+    }
+
+    // Topic (Stage 6) / Unit (Stage 4): any value used in one output but not the other.
+    const field = state.filters.stage === 'Stage 6' ? 'topic' : (state.filters.stage === 'Stage 4' ? 'unit' : null);
+    if (field){
+      const vals = arr => [...new Set(arr.filter(Boolean).map(sl => sl.statement[field]).filter(Boolean))];
+      const a = vals(ls), b = vals(sti);
+      const onlyA = a.filter(v => b.indexOf(v) === -1), onlyB = b.filter(v => a.indexOf(v) === -1);
+      if (a.length && b.length && (onlyA.length || onlyB.length)){
+        const noun = field === 'topic' ? 'Topic' : 'Unit';
+        out.push(`${noun} differs (Strengths: ${a.join(', ')}; Strategies: ${b.join(', ')})`);
+      }
+    }
+
+    // Tier: same slot, two or more levels apart (e.g. Extensive strength
+    // with an Elementary strategy for the same area).
+    profile.categories.forEach((cat, i) => {
+      const a = ls[i], b = sti[i];
+      if (!a || !b || b.swap) return;
+      const ta = TIERS.indexOf(a.statement.tier), tb = TIERS.indexOf(b.statement.tier);
+      if (ta !== -1 && tb !== -1 && Math.abs(ta - tb) >= 2){
+        out.push(`${categoryLabelForProfile(profile, cat)} tier gap (Strengths: ${a.statement.tier}; Strategies: ${b.statement.tier})`);
+      }
+    });
+    return out;
+  }
+
+  function renderCrossCheck(){
+    const el = document.getElementById('crosscheck');
+    if (!el) return;
+    const ws = crossCheckWarnings();
+    el.innerHTML = '';
+    const ls = state.selected.learning_strength.some(Boolean), sti = state.selected.strategy_to_improve.some(Boolean);
+    if (!ls || !sti){
+      el.textContent = 'Shown once both outputs have at least one statement.';
+      el.className = 'review-text empty';
+      return;
+    }
+    el.className = 'review-text' + (ws.length ? ' crosscheck-warn' : ' crosscheck-ok');
+    if (!ws.length){
+      el.textContent = '✔ No instrument, topic/unit or tier inconsistencies found between Strengths and Strategies.';
+      return;
+    }
+    const ul = document.createElement('ul');
+    ws.forEach(w => { const li = document.createElement('li'); li.textContent = '⚠ ' + w; ul.appendChild(li); });
+    el.appendChild(ul);
+    const note = document.createElement('div');
+    note.className = 'crosscheck-note';
+    note.textContent = 'Reminder only — copying is still allowed. Check both comments describe the same student.';
+    el.appendChild(note);
+  }
+
   function renderReview(){
+    // v5.3: a change in either output can change the cross-check, so
+    // re-run both builders' validation lists.
+    COMMENT_TYPE_ORDER.forEach(ct => renderValidation(ct, buildComment(ct)));
+    renderCrossCheck();
     COMMENT_TYPE_ORDER.forEach(commentType => {
       const prefix = BUILDER_PREFIX[commentType];
       const el = document.getElementById(`review-${prefix}`);
@@ -1077,7 +1158,7 @@
   renderDropzoneLabels();
   renderBank();
   // Expose read-only hooks for automated regression tests (no UI effect).
-  window.__commentBuilderTest = { countSentences, validateComment, state, APP_VERSION };
+  window.__commentBuilderTest = { countSentences, validateComment, crossCheckWarnings, state, APP_VERSION };
   COMMENT_TYPE_ORDER.forEach(commentType => {
     renderDropzones(commentType);
     renderPreview(commentType);
