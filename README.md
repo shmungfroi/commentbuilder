@@ -27,10 +27,13 @@ A standalone, offline, single-file web app for building Sentral-ready **Learning
 | Path | What |
 |---|---|
 | `index.html` | The built app (current version) |
-| `data/statement_bank_v5.1.json` | Exported statement bank: 3,520 records plus metadata (same as the data embedded in the app) |
+| `data/statement_bank_v5.5.json` | **Current** statement bank: 3,520 records plus metadata (identical to the data embedded in the app) |
+| `data/statement_bank_v5.1.json` | Original v5.1 bank, kept unchanged for reference |
+| `data/diffs/v5.1_to_v5.5.json` | Every approved text change: id, change group, old and new text |
 | `src/app.js` | App logic (the script block of `index.html`) |
-| `src/base/Music_Report_Comment_Builder_v5.1_ORIGINAL.html` | Recovered v5.1 baseline. It supplies the page shell and the embedded data block for builds. |
-| `tools/build.py` | Rebuilds `index.html` from the baseline plus `src/app.js`. The data block is copied byte-for-byte. |
+| `src/base/Music_Report_Comment_Builder_v5.1_ORIGINAL.html` | Recovered v5.1 baseline. It supplies the page shell for builds. |
+| `tools/build.py` | Rebuilds `index.html` from the baseline shell, `src/app.js` and the current bank |
+| `tools/verify_diff.py` | Confirms two banks differ only by the listed, approved text changes |
 | `tests/regression_suite.py` | Headless-Chrome regression suite that drives the real UI |
 | `tests/results/` | Recorded results per version |
 | `docs/` | Audit report, test reports, and the original migration package |
@@ -40,17 +43,20 @@ A standalone, offline, single-file web app for building Sentral-ready **Learning
 
 ```bash
 # Rebuild the app
-python3 -I tools/build.py src/base/Music_Report_Comment_Builder_v5.1_ORIGINAL.html src/app.js index.html
+python3 -I tools/build.py src/base/Music_Report_Comment_Builder_v5.1_ORIGINAL.html src/app.js index.html data/statement_bank_v5.5.json
 
 # Run the regression suite (needs Python Playwright and Chrome/Chromium)
-python3 -I tests/regression_suite.py "$PWD/index.html" data/statement_bank_v5.1.json local tests/results/local.json
+python3 -I tests/regression_suite.py "$PWD/index.html" data/statement_bank_v5.5.json local tests/results/local.json
+
+# Confirm the bank differs from v5.1 only by the approved changes
+python3 -I tools/verify_diff.py data/statement_bank_v5.1.json data/statement_bank_v5.5.json data/diffs/v5.1_to_v5.5.json
 ```
 
 `tests/regression_suite.py` expects Chrome at `/usr/bin/google-chrome`. Edit `executable_path` if yours is elsewhere.
 
 ## Ground rules
 
-- **The statement bank is not edited by app changes.** Each build checks that the embedded data block is unchanged, and the test suite compares it with `data/statement_bank_v5.1.json`.
+- **Statement text changes only with approval and a machine-readable diff.** Each build checks that the embedded bank matches the data file, and `tools/verify_diff.py` confirms only approved changes were made.
 - **No Sentral character limit is assumed** until the school confirms one.
 - See `docs/migration/GOVERNING_SPEC.md` for the governing specification.
 

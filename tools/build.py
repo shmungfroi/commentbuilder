@@ -4,6 +4,9 @@ Usage: python3 -I build.py <original.html> <app.js> <out.html>"""
 import sys, hashlib
 
 src, js, out = sys.argv[1:4]
+# v5.5: optional 4th argument = statement bank JSON to embed (default: keep the
+# baseline's embedded data byte-for-byte).
+bank_path = sys.argv[4] if len(sys.argv) > 4 else None
 h = open(src, encoding='utf-8').read()
 
 DATA_OPEN = '<script id="statement-data" type="application/json">'
@@ -87,11 +90,20 @@ s0 = tail.index('<script>') + len('<script>')
 s1 = tail.index('</script>', s0)
 tail = tail[:s0] + '\n' + open(js, encoding='utf-8').read() + '\n' + tail[s1:]
 
+if bank_path:
+    import json
+    bank_text = json.dumps(json.load(open(bank_path, encoding='utf-8')), ensure_ascii=False, indent=2)
+    assert '</' not in bank_text, 'bank text would break the script element'
+    data_block = DATA_OPEN + '\n' + bank_text + '\n</script>'
 result = head + data_block + tail
 open(out, 'w', encoding='utf-8').write(result)
 
 orig_data = hashlib.sha256(data_block.encode()).hexdigest()
 o = open(out, encoding='utf-8').read()
 e0 = o.index(DATA_OPEN); e1 = o.index('</script>', e0) + len('</script>')
-print('data block identical:', o[e0:e1] == data_block, orig_data[:16])
+print('data block as intended:', o[e0:e1] == data_block, orig_data[:16])
+if bank_path:
+    import json
+    emb = json.loads(o[e0 + len(DATA_OPEN):e1 - len('</script>')])
+    print('embedded bank == file:', emb == json.load(open(bank_path, encoding='utf-8')), 'version', emb['metadata']['version'])
 print('bytes:', len(result.encode()))

@@ -65,6 +65,19 @@ with sync_playwright() as p:
     diffs = sum(1 for a, b in zip(emb['statements'], bank) if a != b) + abs(len(emb['statements']) - len(bank))
     rec('D02', 'Embedded bank == statement_bank_v5.1.json', '0 record changes', f'identical={same}; changed records={diffs}', same and diffs == 0)
 
+    # v5.5 text standards on the embedded bank
+    import re as _re
+    st = emb['statements']
+    tail_n = sum(x['text'].endswith('as part of senior music study.') for x in st)
+    ph_n = sum(bool(_re.search(r'topic repertoire|HSC elective topic', x['text'])) for x in st)
+    lim_n = sum(bool(_re.search(r'\blimited\b', x['text'])) for x in st if x['commentType'] == 'learning_strength')
+    if emb['metadata']['version'] >= '5.5':
+        rec('T01', 'No sentence ends "...as part of senior music study"', '0', str(tail_n), tail_n == 0)
+        rec('T02', 'No placeholder topic labels in sentence text', '0', str(ph_n), ph_n == 0)
+        rec('T03', 'No "limited" in Learning Strengths', '0', str(lim_n), lim_n == 0)
+    else:
+        for t in ('T01', 'T02', 'T03'): rec(t, 'v5.5 text standard', 'applies from v5.5', f'bank {emb["metadata"]["version"]}', None)
+
     # ---------------- Context lock (F1/F2) ----------------
     load()
     ids = [pick(stage='Stage 4', commentType='learning_strength', category='P')['id'],

@@ -22,7 +22,7 @@
   const COMMENT_PROFILES = DATA.metadata.commentProfiles || {}; // { "Stage 6 Performance": ["P","M","A"], ... }
   const CATEGORY_LABEL_OVERRIDES = DATA.metadata.categoryLabelOverrides || {};
 
-  const APP_VERSION = '5.4';
+  const APP_VERSION = '5.5';
   document.getElementById('data-status').textContent =
     `${statements.length} statements loaded · app v${APP_VERSION} · data ${DATA.metadata.version}`;
 

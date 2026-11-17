@@ -1,6 +1,6 @@
-# Proposed statement text changes — v5.5 (NOT APPLIED)
+# Statement text changes — v5.5 (approved and applied)
 
-**Status:** awaiting Justin's approval. The bank is unchanged until approved. **Records affected:** 2407 of 3,520. Every change is listed in `proposals/v5.5_text_changes.json` (id · change · old · new).
+**Status:** ✔ **Approved (A, B, C) by Justin, 17 Nov 2026, and applied in v5.5.** **Records affected:** 2407 of 3,520. Every change is listed in `proposals/v5.5_text_changes.json` (id · change · old · new).
 
 | Change | What | Records |
 |---|---|---|

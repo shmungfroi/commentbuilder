@@ -1,5 +1,35 @@
 # Changelog — Music Report Comment Builder
 
+## v5.5 — 17 Nov 2026
+
+**Statement bank: 2,407 sentences reworded, approved by Justin Ossher on 17 Nov 2026 (groups A, B and C).**
+- Only the `text` field changed. IDs, tags and the record count (3,520) are unchanged.
+- The bank version is now `5.5`.
+- Every change is in `data/diffs/v5.1_to_v5.5.json` and verified by `tools/verify_diff.py`.
+- `data/statement_bank_v5.1.json` is kept unchanged for reference.
+
+| Group | Change | Records |
+|---|---|---|
+| A | Removed the trailing "…as part of senior music study" (Stage 6) | 2,265 |
+| B | Placeholder topic labels reworded as plain report language (Stage 6 HSC). E.g. "mandatory topic repertoire" → "repertoire from the mandatory topic"; "HSC elective topic" → "the HSC topics" | 200 |
+| C | Deficit wording ("limited") in 22 Stage 5 Learning Strengths reworded with asset framing, keeping the tier | 22 |
+
+(80 records are in both A and B; 2,407 records changed in total.)
+
+### Effects
+- Stage 6 comments are typically 30–90 characters shorter.
+- No template labels appear in comments.
+- No Learning Strength states a limitation.
+
+### Unchanged
+- Topic *filter* labels in the app, such as the "HSC elective topic" chip, still use the original metadata names. Only sentence text changed.
+- The 110 sentences that *open* "Approaches senior music study…" still do.
+
+### Build and tests
+- `tools/build.py` now embeds the current bank file.
+- App version 5.5. No other app logic changed.
+- 3 new tests (T01–T03: no trailing phrase, no placeholder labels, no "limited" in strengths). 67/67 pass.
+
 ## v5.4 — 17 Nov 2026
 
 **Statement bank: unchanged.** The data block is byte-identical. All changes are app logic and markup.
@@ -30,7 +60,7 @@
 
 ### Proposed, not applied
 
-- `docs/PROPOSED_TEXT_CHANGES_v5.5.md` and `proposals/v5.5_text_changes.json` cover 2,407 statement-text changes in three separately approvable groups (A, B, C), awaiting approval.
+- `docs/PROPOSED_TEXT_CHANGES_v5.5.md` and `proposals/v5.5_text_changes.json` cover 2,407 statement-text changes in three separately approvable groups (A, B, C). *(Approved and applied in v5.5.)*
 
 ## v5.3 — 17 Nov 2026
 
