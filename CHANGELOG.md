@@ -1,5 +1,38 @@
 # Changelog — Music Report Comment Builder
 
+## v5.6 — 17 Nov 2026
+
+**Decisions (17 Nov 2026):** the Sentral limit is **150 characters per comment box** for **all of Stage 4** (Years 7 and 8). Comments stay three sentences, using a new short sentence set.
+
+### Statement bank: 155 records added (3,520 → 3,675). No existing record changed.
+
+- **120 short Stage 4 sentences:** 4 units × Performance/Composition/Listening × 5 tiers × Strengths/Strategies.
+  - Written from the unit summaries (Ode to Joy, rhythm composition, chords and riffs in TAB, DAW layering, 12-bar blues and blues scale).
+  - Wording steps down genuinely by tier.
+- **35 short General strategies:** 7 areas × 5 tiers, so the General swap also fits.
+- **Length:** every new sentence is 31–48 characters, so the worst-case comment is 146 characters (checked over every possible combination).
+- **Checks run on each sentence by `tools/add_stage4_short.py`:**
+  - no pronouns, and no first or second person;
+  - one sentence;
+  - Australian spelling;
+  - no deficit wording;
+  - Strengths in present-tense third person, Strategies in the imperative;
+  - no duplicates.
+- **New fields:** the records are tagged `statementLength: "short"`. The metadata gains `sentralCharLimits` (Stage 4: 150 per output) and `short` as a length option, and the counts are updated. Bank version `5.6`.
+- **Review list:** all 155 sentences are listed by unit and tier in `docs/STAGE4_SHORT_SET_v5.6.md`.
+
+### App
+
+- **Stage 4 limit.** The limit is fixed at 150 for both boxes. The Sentral limit field shows 150 and can't be edited. A comment over 150 can't be copied.
+- **Stage 4 bank.** It shows only the short set. The 285 original Stage 4 sentences remain in the data file but are hidden in Stage 4, because none of them can fit 150 in a three-sentence comment.
+- **Specificity filter.** It is hidden in Stage 4, since every short sentence is unit-specific.
+- **Stages 5 and 6.** No change: the limit is still entered manually and blank by default.
+
+### Tests
+
+- 6 new tests (L01–L06): fixed limit, short-only bank, the longest possible comment in each box, the General swap, Stage 5 unaffected, and a static check of every combination.
+- 73/73 pass.
+
 ## v5.5 — 17 Nov 2026
 
 **Statement bank: 2,407 sentences reworded, approved by Justin Ossher on 17 Nov 2026 (groups A, B and C).**
