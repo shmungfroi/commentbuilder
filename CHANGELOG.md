@@ -1,5 +1,16 @@
 # Changelog — Music Report Comment Builder
 
+## v5.7 — 20 Nov 2026
+
+- **Stage 4 Sentral limit raised to 200 characters per comment box** (was 150), as set by Justin. Fixed in the app, not editable.
+- **Stage 4 short set rewritten in Justin's voice.** Plain, direct, practical musician's language (feel, groove, by ear, in time, listening to others), with tiers that genuinely step down.
+  - 125 of 155 sentences changed; 30 kept as they were. Same IDs, units, tiers and tags; only `text` changed.
+  - Every sentence is 66 characters or fewer, so any three-sentence comment fits 200. Worst case now: 197.
+  - All v5.6 checks still pass: no pronouns, one sentence, Australian spelling, no deficit wording, Strengths third person / Strategies imperative, no duplicates.
+  - Tool: `tools/rewrite_stage4_short_v57.py`. Diff: `data/diffs/v5.6_to_v5.7.json`. Review list: `docs/STAGE4_SHORT_SET_v5.7.md`.
+- **Tests:** L01–L06 now read the Stage 4 limit from the bank metadata. 73/73 pass.
+- Bank `data/statement_bank_v5.7.json` (version `5.7`); app version `5.7`. Stage 5 and 6 unchanged.
+
 ## v5.6.1 — 17 Nov 2026
 
 - **Stage 5 Learning Strengths: Sentral limit 800 characters**, as confirmed by Justin.

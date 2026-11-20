@@ -11,6 +11,7 @@ bankdoc = json.load(open(BANK, encoding='utf-8'))
 bank = bankdoc['statements']; meta = bankdoc['metadata']
 PROFILES = [p for p in meta['commentProfiles'] if p.startswith('Stage 6')]
 
+LIM4 = (meta.get('sentralCharLimits', {}).get('Stage 4') or {}).get('perOutput', 150)
 SHORT4 = any(x.get('statementLength') == 'short' and x['stage'] == 'Stage 4' for x in bank)
 def pick(**kw):
     # v5.6: Stage 4 shows the short set when a fixed limit applies
@@ -410,12 +411,12 @@ with sync_playwright() as p:
     else:
         rec('N01', 'Next student', 'button present', 'no Next student button in this build', False)
 
-    # ---------------- v5.6: Stage 4 150-character limit + short set ----------------
+    # ---------------- v5.6/v5.7: Stage 4 fixed character limit + short set ----------------
     if SHORT4:
         load(); chip('stage', 'Stage 4')
         inp = page.locator('#charlimit-LS')
-        rec('L01', 'Stage 4 Sentral limit', '150 per box, fixed', f'LS="{inp.input_value()}" disabled={inp.is_disabled()}; STI="{page.locator("#charlimit-STI").input_value()}"',
-            inp.input_value() == '150' and inp.is_disabled() and page.locator('#charlimit-STI').input_value() == '150')
+        rec('L01', 'Stage 4 Sentral limit', f'{LIM4} per box, fixed', f'LS="{inp.input_value()}" disabled={inp.is_disabled()}; STI="{page.locator("#charlimit-STI").input_value()}"',
+            inp.input_value() == str(LIM4) and inp.is_disabled() and page.locator('#charlimit-STI').input_value() == str(LIM4))
         vis = bank_ids()
         rec('L02', 'Stage 4 bank shows the short set only', '155 short statements', f'{len(vis)} shown; all short={all(byid[i].get("statementLength") == "short" for i in vis)}',
             len(vis) == 155 and all(byid[i].get('statementLength') == 'short' for i in vis))
@@ -425,11 +426,11 @@ with sync_playwright() as p:
         for (ct, c), x in longest.items():
             if c != 'G': select(x['id'])
         lsn, stn = len(preview('LS')), len(preview('STI'))
-        rec('L03', 'Longest short sentences in every slot', 'both <= 150 and copyable', f'LS {lsn} chars copy={copy_on("LS")}; STI {stn} chars copy={copy_on("STI")}; count="{page.locator("#charcount-STI").inner_text()}"',
-            lsn <= 150 and stn <= 150 and copy_on('LS') and copy_on('STI') and '/ limit 150' in page.locator('#charcount-STI').inner_text())
+        rec('L03', 'Longest short sentences in every slot', f'both <= {LIM4} and copyable', f'LS {lsn} chars copy={copy_on("LS")}; STI {stn} chars copy={copy_on("STI")}; count="{page.locator("#charcount-STI").inner_text()}"',
+            lsn <= LIM4 and stn <= LIM4 and copy_on('LS') and copy_on('STI') and f'/ limit {LIM4}' in page.locator('#charcount-STI').inner_text())
         g = longest[('strategy_to_improve', 'G')]
         page.locator(f'#bank-grid .card[data-id="{g["id"]}"] .swap-btn').nth(1).click()
-        rec('L04', 'Longest General strategy swapped in', '<= 150, copyable', f'{len(preview("STI"))} chars copy={copy_on("STI")}', len(preview('STI')) <= 150 and copy_on('STI'))
+        rec('L04', 'Longest General strategy swapped in', f'<= {LIM4}, copyable', f'{len(preview("STI"))} chars copy={copy_on("STI")}', len(preview('STI')) <= LIM4 and copy_on('STI'))
         page.click('#filter-stage .chip[data-value="Stage 5"]')
         ls, st_ = page.locator('#charlimit-LS'), page.locator('#charlimit-STI')
         rec('L05', 'Stage 5 limits', 'Strengths fixed at 800; Strategies editable and blank', f'LS="{ls.input_value()}" disabled={ls.is_disabled()}; STI="{st_.input_value()}" disabled={st_.is_disabled()}',
@@ -437,7 +438,7 @@ with sync_playwright() as p:
         import itertools
         worst = max(sum(len(x['text']) for x in combo) + 2 for ct in ('learning_strength', 'strategy_to_improve')
                     for combo in itertools.product(*[[x for x in short if x['commentType'] == ct and x['category'] == c] for c in 'PCL']))
-        rec('L06', 'Every possible Stage 4 short combination (static check)', '<= 150', f'worst case {worst} chars', worst <= 150)
+        rec('L06', 'Every possible Stage 4 short combination (static check)', f'<= {LIM4}', f'worst case {worst} chars', worst <= LIM4)
 
     # ---------------- A01 keyboard ----------------
     load()

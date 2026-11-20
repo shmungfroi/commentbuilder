@@ -22,7 +22,7 @@
   const COMMENT_PROFILES = DATA.metadata.commentProfiles || {}; // { "Stage 6 Performance": ["P","M","A"], ... }
   const CATEGORY_LABEL_OVERRIDES = DATA.metadata.categoryLabelOverrides || {};
 
-  const APP_VERSION = '5.6.1';
+  const APP_VERSION = '5.7';
   // v5.6: verified per-stage Sentral limits (metadata.sentralCharLimits)
   const STAGE_CHAR_LIMITS = (DATA.metadata.sentralCharLimits) || {};
   document.getElementById('data-status').textContent =
@@ -559,7 +559,7 @@
       if (state.filters.topic && s.topic !== state.filters.topic) return false;
       if (state.filters.voiceTag && s.voiceTag !== state.filters.voiceTag) return false;
       if (state.filters.statementLength && s.statementLength !== state.filters.statementLength) return false;
-      // v5.6: Stage 4 has a 150-character limit; only the short set can fit,
+      // v5.6: Stage 4 has a fixed limit (200 from v5.7); only the short set is shown,
       // so long Stage 4 statements are hidden there (kept in the data file).
       if (state.filters.stage === 'Stage 4' && presetLimit('learning_strength') && s.stage === 'Stage 4' && s.statementLength !== 'short') return false;
       // v5.4: the instrument narrows Performance statements only (to that
@@ -881,7 +881,7 @@
   // a verified figure; until then the live count is informational.
   const LIMIT_KEY = { learning_strength: 'rbscCommentBuilder.charLimit.LS', strategy_to_improve: 'rbscCommentBuilder.charLimit.STI' };
   // v5.6: verified per-stage Sentral limits from the bank's metadata
-  // (Stage 4 = 150 characters per comment box). These override the
+  // (Stage 4 = 200 characters per comment box from v5.7). These override the
   // browser-stored limit and cannot be edited in the app.
   // v5.6.1: a stage's limit may apply to both boxes (perOutput) or to one
   // comment type (e.g. Stage 5 Learning Strengths = 800).
