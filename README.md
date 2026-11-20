@@ -18,9 +18,10 @@ A standalone, offline, single-file web app for building Sentral-ready **Learning
 3. **Check the warnings.**
    - The ✔/✘ checklist must be all ✔ before **Copy** is enabled.
    - Amber ⚠ lines are reminders only (e.g. mixed topics, or a Strengths ↔ Strategies cross-check).
-4. **Character count.** It shows under each preview. **Stage 4 is fixed at 200 characters per box**, and its bank shows only the short sentence set, which always fits. **Stage 5 Learning Strengths is fixed at 800.** For other boxes, enter the verified Sentral limit in the **Sentral limit** box. It is remembered in your browser and blank by default.
-5. **Copy** each output and paste it into Sentral.
-6. **Next student** clears both comments and the per-student filters, but keeps the class context.
+4. **Comment dock.** Both comments, their Copy buttons and a ready/fix status sit at the top of the right-hand panel, which stays on screen while you scroll the bank. Use **Show first: Strengths | Improvements** to choose which comment is on top. The choice is remembered in your browser.
+5. **Character count.** It shows under each preview. **Stage 4 is fixed at 200 characters per box**, and its bank shows only the short sentence set, which always fits. **Stage 5 Learning Strengths is fixed at 800.** For other boxes, enter the verified Sentral limit in the **Sentral limit** box. It is remembered in your browser and blank by default.
+6. **Copy** each output and paste it into Sentral.
+7. **Next student** clears both comments and the per-student filters, but keeps the class context.
 
 ## Repository layout
 

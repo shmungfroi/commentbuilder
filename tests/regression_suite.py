@@ -440,6 +440,41 @@ with sync_playwright() as p:
                     for combo in itertools.product(*[[x for x in short if x['commentType'] == ct and x['category'] == c] for c in 'PCL']))
         rec('L06', 'Every possible Stage 4 short combination (static check)', f'<= {LIM4}', f'worst case {worst} chars', worst <= LIM4)
 
+    # ---------------- v5.8: comment dock + order switch ----------------
+    load()
+    has = page.locator('#comment-dock').count() == 1
+    if not has:
+        for t in ('K01','K02','K03','K04','K05'): rec(t, 'Comment dock', 'present', 'no dock in this build', False)
+    else:
+        dock_ids = page.evaluate("() => [...document.querySelectorAll('#comment-dock .comment-card')].map(c => c.id)")
+        inside = page.evaluate("""() => ['preview','copy','clear','charcount'].every(k => ['LS','STI'].every(p =>
+            document.getElementById(k + '-' + p).closest('#comment-dock')))""")
+        rec('K01', 'Both comments, counts, Copy and Clear in the dock', 'Strengths first by default; all inside',
+            f'order={dock_ids}; inside={inside}', dock_ids == ['card-LS', 'card-STI'] and inside)
+        page.click('.order-btn[data-first="STI"]')
+        dock2 = page.evaluate("() => [...document.querySelectorAll('#comment-dock .comment-card')].map(c => c.id)")
+        blocks = page.evaluate("() => [...document.querySelectorAll('#builders-panel > .builder-block')].map(b => b.id)")
+        pressed = page.locator('.order-btn[data-first="STI"]').get_attribute('aria-pressed')
+        rec('K02', 'Order switch: Improvements first', 'dock and builders reorder',
+            f'dock={dock2}; builders={blocks}; pressed={pressed}',
+            dock2 == ['card-STI', 'card-LS'] and blocks[:2] == ['builder-STI', 'builder-ls'] and pressed == 'true')
+        load(clear_storage=False)
+        dock3 = page.evaluate("() => [...document.querySelectorAll('#comment-dock .comment-card')].map(c => c.id)")
+        rec('K03', 'Order remembered after reload', 'Improvements still first', f'dock={dock3}', dock3 == ['card-STI', 'card-LS'])
+        page.click('.order-btn[data-first="LS"]')
+        chip('stage', 'Stage 4')
+        a = pick(stage='Stage 4', commentType='learning_strength', category='P')
+        b = pick(stage='Stage 4', commentType='learning_strength', category='C')
+        select(a['id']); select(b['id'])
+        st = page.locator('#card-status-LS').inner_text()
+        rec('K04', 'Comment shows as it is built', 'partial text + still to add',
+            f'preview="{preview("LS")}"; status="{st}"; copy={copy_on("LS")}',
+            preview('LS') == a['text'] + ' ' + b['text'] and 'Still to add' in st and not copy_on('LS'))
+        select(pick(stage='Stage 4', commentType='learning_strength', category='L')['id'])
+        st = page.locator('#card-status-LS').inner_text()
+        rec('K05', 'Complete comment status', 'Ready to copy, Copy enabled', f'status="{st}"; copy={copy_on("LS")}',
+            'Ready to copy' in st and copy_on('LS'))
+
     # ---------------- A01 keyboard ----------------
     load()
     info = page.evaluate("""() => { const c = document.querySelector('#filter-stage .chip');

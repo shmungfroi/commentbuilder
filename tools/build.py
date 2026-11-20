@@ -62,6 +62,45 @@ CSS = """
   #next-student:hover{filter:brightness(1.15);}
   #next-student:focus-visible{outline:3px solid #F4B183;outline-offset:2px;}
   button.chip.disabled{cursor:not-allowed;}
+  /* ---- v5.8 comment dock + order switch ---- */
+  @media (min-width:1201px){
+    .layout{grid-template-columns:240px 1fr 460px;}
+    #builders-panel{position:sticky;top:14px;max-height:calc(100vh - 28px);overflow-y:auto;padding-top:0;}
+  }
+  .builder-toolbar{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+    padding:12px 0 10px 0;background:#fff;}
+  .builder-toolbar #next-student{width:auto;margin:0;padding:8px 14px;font-size:0.85rem;}
+  .order-switch{display:flex;align-items:center;gap:0;font-size:0.8rem;}
+  .order-label{margin-right:8px;color:#555;font-weight:600;}
+  .order-btn{font-family:inherit;font-size:0.8rem;font-weight:600;padding:7px 12px;cursor:pointer;
+    border:1px solid var(--navy);background:#fff;color:var(--navy);}
+  .order-btn:first-of-type{border-radius:6px 0 0 6px;}
+  .order-btn:last-of-type{border-radius:0 6px 6px 0;border-left:none;}
+  .order-btn[aria-pressed="true"]{background:var(--navy);color:#fff;}
+  .order-btn:focus-visible{outline:3px solid #F4B183;outline-offset:2px;}
+  #comment-dock{display:flex;flex-direction:column;gap:10px;padding-bottom:12px;margin-bottom:14px;
+    border-bottom:2px solid #e3e3e3;background:#fff;}
+  @media (min-width:1201px) and (min-height:760px){
+    .builder-toolbar{position:sticky;top:0;z-index:6;}
+    #comment-dock{position:sticky;top:52px;z-index:5;}
+  }
+  .comment-card{border:1px solid #c9d6ea;border-left:5px solid var(--navy);border-radius:8px;padding:10px 12px;background:#FAFCFF;}
+  .comment-card.strategy{border-color:#bfe0db;border-left-color:var(--teal);background:#F7FCFB;}
+  .card-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px;flex-wrap:wrap;}
+  .card-title{font-weight:700;font-size:0.9rem;color:var(--navy);}
+  .comment-card.strategy .card-title{color:#1d6f65;}
+  .card-status{font-size:0.75rem;font-weight:600;color:#666;}
+  .card-status.ok{color:#2e7d32;} .card-status.warn{color:#9a5b00;} .card-status.fail{color:var(--red);}
+  .comment-card .preview-box{font-size:1rem;line-height:1.55;min-height:0;margin-bottom:8px;background:#fff;}
+  .preview-box.empty{color:#888;font-style:italic;font-size:0.85rem;border-style:dashed;}
+  .preview-box.partial{border-style:dashed;}
+  .preview-box.ready{box-shadow:0 0 0 2px #B5D6A7;}
+  .comment-card .char-row{margin:0 0 8px 0;}
+  .comment-card .actions .copy-btn{flex:3;}
+  .comment-card .actions .clear-btn{flex:1;background:#fff;color:var(--red);border:1px solid var(--red);}
+  .comment-card .actions .clear-btn:hover{background:#fbeaea;}
+  .comment-card .copy-msg{height:auto;min-height:0;margin-top:4px;}
+  .comment-card .copy-msg:empty{display:none;}
 </style>"""
 
 def char_row(prefix):
@@ -82,6 +121,7 @@ head = rep(head, '<h3 class="strategy">Strategies to Improve</h3>\n        <div 
            '<h3 class="strategy">Strategies to Improve</h3>\n        <div class="review-text empty" id="review-STI">Not yet complete.</div>\n      </div>\n'
            '      <div class="review-block">\n        <h3>Strengths ↔ Strategies cross-check</h3>\n'
            '        <div class="review-text empty" id="crosscheck" aria-live="polite">Shown once both outputs have at least one statement.</div>\n      </div>')
+head = rep(head, '<!-- BUILDERS PANEL -->\n  <div class="panel">', '<!-- BUILDERS PANEL -->\n  <div class="panel" id="builders-panel">')
 head = rep(head, '<button id="reset-filters">', '<button type="button" id="reset-filters">')
 
 head = rep(head, '<!-- LEARNING STRENGTHS BUILDER -->',

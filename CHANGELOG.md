@@ -1,5 +1,16 @@
 # Changelog — Music Report Comment Builder
 
+## v5.8 — 20 Nov 2026
+
+Layout change so the comment being built is always visible and can be copied without scrolling. **Statement bank unchanged (5.7).**
+
+- **Comment dock.** Both comments now sit together at the top of the builders panel, each with its preview, character count, Copy, Clear and a one-line status. The status reads "Still to add: …", "✔ Ready to copy" (plus any ⚠ reminders) or "✘ N checks to fix". The slots and full checklists are below the dock.
+- **Order switch.** *Show first: Strengths | Improvements* reorders the dock and the builders. It is remembered in this browser.
+- **The panel stays on screen.** On wide screens (over 1200px) the builders panel stays fixed while the bank scrolls. On screens at least 760px tall, the dock also stays pinned while the slots scroll beneath it. The panel is slightly wider (460px).
+- **Comment shows as it is built.** The preview fills in sentence by sentence instead of staying blank until all three slots are filled. It has a dashed border until complete and a green glow when ready to copy. Copy still needs all checks to pass.
+- **Next student** moved into the toolbar beside the switch. **Clear** is now a smaller outlined button next to Copy.
+- **Tests:** 5 new (K01–K05: dock contents, order switch, order remembered, partial comment, ready status). 78/78 pass.
+
 ## v5.7 — 20 Nov 2026
 
 - **Stage 4 Sentral limit raised to 200 characters per comment box** (was 150), as set by Justin. Fixed in the app, not editable.

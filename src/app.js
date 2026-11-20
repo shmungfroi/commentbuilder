@@ -22,7 +22,7 @@
   const COMMENT_PROFILES = DATA.metadata.commentProfiles || {}; // { "Stage 6 Performance": ["P","M","A"], ... }
   const CATEGORY_LABEL_OVERRIDES = DATA.metadata.categoryLabelOverrides || {};
 
-  const APP_VERSION = '5.7';
+  const APP_VERSION = '5.8';
   // v5.6: verified per-stage Sentral limits (metadata.sentralCharLimits)
   const STAGE_CHAR_LIMITS = (DATA.metadata.sentralCharLimits) || {};
   document.getElementById('data-status').textContent =
@@ -960,15 +960,42 @@
     const profile = getActiveProfile();
     const catLabels = profile.categories.map(c => categoryLabelForProfile(profile, c));
 
+    // v5.8: the comment shows as it is built, sentence by sentence.
+    const partial = comment ? '' : partialText(commentType);
     if (!comment){
-      box.textContent = `Select one ${catLabels[0]}, one ${catLabels[1]} and one ${catLabels[2]} ${COMMENT_TYPES[commentType]} statement.`;
+      box.textContent = partial || `Select one ${catLabels[0]}, one ${catLabels[1]} and one ${catLabels[2]} ${COMMENT_TYPES[commentType]} statement.`;
       copyBtn.disabled = true;
     } else {
       box.textContent = comment;
     }
+    box.classList.toggle('empty', !comment && !partial);
+    box.classList.toggle('partial', !comment && !!partial);
 
     renderCharCount(commentType, comment);
     renderValidation(commentType, comment);
+    box.classList.toggle('ready', !!comment && !copyBtn.disabled);
+    renderCardStatus(commentType, comment, catLabels);
+  }
+
+  // v5.8: one-line status in the comment dock, so it is clear at a glance
+  // whether the comment can be copied, and what is missing if not.
+  function renderCardStatus(commentType, comment, catLabels){
+    const el = document.getElementById(`card-status-${BUILDER_PREFIX[commentType]}`);
+    if (!el) return;
+    let cls = 'todo', txt;
+    if (!comment){
+      const sel = state.selected[commentType];
+      const missing = catLabels.filter((_, i) => !sel[i]);
+      txt = missing.length === 3 ? 'Empty' : `Still to add: ${missing.join(', ')}`;
+    } else {
+      const r = validateComment(commentType);
+      const fails = r.checks.filter(c => !c.pass).length;
+      if (fails){ cls = 'fail'; txt = `✘ ${fails} check${fails > 1 ? 's' : ''} to fix (see checklist below)`; }
+      else if (r.warnings.length){ cls = 'warn'; txt = `✔ Ready to copy · ⚠ ${r.warnings.length} reminder${r.warnings.length > 1 ? 's' : ''} below`; }
+      else { cls = 'ok'; txt = '✔ Ready to copy'; }
+    }
+    el.className = 'card-status ' + cls;
+    el.textContent = txt;
   }
 
   // v5.2: validation re-checks every selected record against the CURRENT
@@ -1248,12 +1275,73 @@
     }
   });
 
+  // ---------- v5.8 Layout: comment dock + order switch ----------
+  // Both finished comments sit together at the top of the builders panel
+  // (preview, count, Copy, Clear, status), with the slots and checklists
+  // below. The order (Strengths or Strategies first) is remembered in this
+  // browser and applies to the dock and the builders.
+  const ORDER_KEY = 'rbscCommentBuilder.order';
+  let orderMemory = 'LS';
+  function arrangeLayout(){
+    const panel = document.getElementById('builders-panel');
+    if (!panel || document.getElementById('comment-dock')) return;
+    const toolbar = document.createElement('div');
+    toolbar.className = 'builder-toolbar';
+    toolbar.innerHTML =
+      '<div class="order-switch" role="group" aria-label="Which comment goes first">' +
+      '<span class="order-label">Show first</span>' +
+      '<button type="button" class="order-btn" data-first="LS">Strengths</button>' +
+      '<button type="button" class="order-btn" data-first="STI">Improvements</button></div>';
+    const nb = document.getElementById('next-student');
+    if (nb) toolbar.appendChild(nb);
+    const dock = document.createElement('div');
+    dock.id = 'comment-dock';
+    COMMENT_TYPE_ORDER.forEach(ct => {
+      const pfx = BUILDER_PREFIX[ct];
+      const card = document.createElement('section');
+      card.className = 'comment-card' + (pfx === 'STI' ? ' strategy' : '');
+      card.id = `card-${pfx}`;
+      card.setAttribute('aria-label', COMMENT_TYPES[ct]);
+      const head = document.createElement('div');
+      head.className = 'card-head';
+      head.innerHTML = `<span class="card-title">${COMMENT_TYPES[ct]}</span><span class="card-status todo" id="card-status-${pfx}" aria-live="polite"></span>`;
+      card.appendChild(head);
+      [`preview-${pfx}`].forEach(id => card.appendChild(document.getElementById(id)));
+      const row = document.getElementById(`charcount-${pfx}`).closest('.char-row');
+      const actions = document.getElementById(`copy-${pfx}`).closest('.actions');
+      document.getElementById(`clear-${pfx}`).textContent = 'Clear';
+      card.appendChild(row);
+      card.appendChild(actions);
+      card.appendChild(document.getElementById(`copy-msg-${pfx}`));
+      dock.appendChild(card);
+    });
+    panel.insertBefore(dock, panel.firstChild);
+    panel.insertBefore(toolbar, dock);
+    toolbar.querySelectorAll('.order-btn').forEach(b => b.addEventListener('click', () => setOrder(b.dataset.first)));
+    let saved = null;
+    try { saved = window.localStorage.getItem(ORDER_KEY); } catch (e) { saved = null; }
+    setOrder(saved === 'STI' ? 'STI' : 'LS', true);
+  }
+  function setOrder(first, initial){
+    orderMemory = first;
+    if (!initial){ try { window.localStorage.setItem(ORDER_KEY, first); } catch (e) { /* in memory only */ } }
+    const dock = document.getElementById('comment-dock');
+    const ls = document.getElementById('builder-ls'), sti = document.getElementById('builder-STI');
+    const [a, b] = first === 'STI' ? ['STI', 'LS'] : ['LS', 'STI'];
+    dock.appendChild(document.getElementById(`card-${a}`));
+    dock.appendChild(document.getElementById(`card-${b}`));
+    const [x, y] = first === 'STI' ? [sti, ls] : [ls, sti];
+    x.parentNode.insertBefore(x, y);
+    document.querySelectorAll('.order-btn').forEach(btn => btn.setAttribute('aria-pressed', String(btn.dataset.first === first)));
+  }
+
   // ---------- Init ----------
+  arrangeLayout();
   renderFilters();
   renderDropzoneLabels();
   renderBank();
   // Expose read-only hooks for automated regression tests (no UI effect).
-  window.__commentBuilderTest = { countSentences, validateComment, crossCheckWarnings, state, APP_VERSION };
+  window.__commentBuilderTest = { countSentences, validateComment, crossCheckWarnings, state, APP_VERSION, getOrder: () => orderMemory };
   COMMENT_TYPE_ORDER.forEach(commentType => {
     renderDropzones(commentType);
     renderPreview(commentType);
