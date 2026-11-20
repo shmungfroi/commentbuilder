@@ -22,7 +22,7 @@
   const COMMENT_PROFILES = DATA.metadata.commentProfiles || {}; // { "Stage 6 Performance": ["P","M","A"], ... }
   const CATEGORY_LABEL_OVERRIDES = DATA.metadata.categoryLabelOverrides || {};
 
-  const APP_VERSION = '5.8';
+  const APP_VERSION = '5.9';
   // v5.6: verified per-stage Sentral limits (metadata.sentralCharLimits)
   const STAGE_CHAR_LIMITS = (DATA.metadata.sentralCharLimits) || {};
   document.getElementById('data-status').textContent =
@@ -38,11 +38,16 @@
     standard: 'Standard', topic_specific: 'Topic-specific', artistry: 'Artistry',
     craft: 'Craft', foundational_practice: 'Foundational Practice'
   };
+  // v5.9: Stage 4 has Guitar and Piano Performance variants; other instruments stay off.
+  const STAGE4_INSTRUMENTS = ['Instrument', 'Guitar', 'Piano'];
   const STATEMENT_LENGTH_LABELS = { standard: 'Standard', expanded: 'Expanded' };
   const GENERAL_SUBCATEGORY_LABELS = {
     work_ethic: 'Work Ethic', classroom_behaviour: 'Classroom Behaviour', organisation: 'Organisation',
     participation: 'Participation', task_completion: 'Task Completion', home_practice: 'Home Practice',
-    music_practice: 'Music Practice'
+    music_practice: 'Music Practice',
+    // v5.9: classroom music aptitude (General Learning Strengths, Stage 4/5)
+    ensemble_awareness: 'Ensemble Awareness', musical_ear: 'Musical Ear', rehearsal_focus: 'Rehearsal Focus',
+    creative_risk: 'Creative Risk-Taking', care_of_instruments: 'Care of Instruments', engagement: 'Engagement'
   };
 
   const STANDARD_PROFILE_NAME = 'Stage 4/5 Standard';
@@ -359,11 +364,17 @@
     }
 
     // ---- General Subcategory (Stage 4/5, Strategies + General category only) ----
-    const generalSubcatVisible = !isStage6 && state.filters.commentType === 'strategy_to_improve' && state.filters.category === 'G';
+    // v5.9: shown for either comment type; only areas that exist for the
+    // current Stage and comment type are offered.
+    const generalSubcatVisible = !isStage6 && state.filters.category === 'G';
     document.getElementById('generalSubcategory-group').style.display = generalSubcatVisible ? '' : 'none';
     if (generalSubcatVisible){
+      const have = new Set(statements.filter(x => x.category === 'G' && x.subcategory &&
+        (!state.filters.stage || x.stage === state.filters.stage) &&
+        (!state.filters.commentType || x.commentType === state.filters.commentType)).map(x => x.subcategory));
       document.querySelectorAll('#filter-generalSubcategory .chip').forEach(chip => {
         chip.classList.toggle('active', state.filters.generalSubcategory === chip.dataset.value);
+        chip.style.display = have.has(chip.dataset.value) ? '' : 'none';
       });
     }
 
@@ -390,7 +401,7 @@
     document.getElementById('instrument-group').style.display = isStage6 ? 'none' : '';
     document.querySelectorAll('#filter-instrument .chip').forEach(chip => {
       chip.classList.toggle('active', state.filters.instrument === chip.dataset.value);
-      chip.classList.toggle('disabled', isStage4 && chip.dataset.value !== 'Instrument');
+      chip.classList.toggle('disabled', isStage4 && !STAGE4_INSTRUMENTS.includes(chip.dataset.value));
     });
     document.getElementById('instrument-group').style.opacity = instrumentDisabled ? '0.45' : '1';
 
@@ -503,10 +514,11 @@
     el.style.display = msg ? '' : 'none';
   }
 
+  // v5.9: General Learning Strengths may swap in too.
   // Stage 4/5 only: a General strategy may stand in for one of P/C/L in the
   // Strategies to Improve builder (at most one per comment).
   function isGeneralSwap(s){
-    return state.filters.stage !== 'Stage 6' && s.category === 'G' && s.commentType === 'strategy_to_improve';
+    return state.filters.stage !== 'Stage 6' && s.category === 'G';
   }
 
   // Returns null if statement s may occupy slot idx of its builder under the
@@ -534,7 +546,7 @@
     if (isGeneralSwap(s)){
       const other = state.selected[s.commentType].findIndex((sl, i) => i !== idx && sl && sl.statement.category === 'G');
       if (other !== -1){
-        return `Only one General strategy per comment — remove the one in slot ${other + 1} first.`;
+        return `Only one General statement per comment — remove the one in slot ${other + 1} first.`;
       }
       return null;
     }
@@ -654,7 +666,7 @@
         btn.dataset.skip = '1';
         const cap = document.createElement('div');
         cap.className = 'swap-caption';
-        cap.textContent = 'Strategies to Improve — use in place of:';
+        cap.textContent = `${COMMENT_TYPES[s.commentType]} — use in place of:`;
         card.appendChild(cap);
         const row = document.createElement('div');
         row.className = 'swap-row';
@@ -664,7 +676,7 @@
           b.className = 'swap-btn';
           const lbl = categoryLabelForProfile(profile, cat);
           b.textContent = `Replace ${lbl}`;
-          b.setAttribute('aria-label', `Use this General strategy in place of ${lbl} in Strategies to Improve`);
+          b.setAttribute('aria-label', `Use this General statement in place of ${lbl} in ${COMMENT_TYPES[s.commentType]}`);
           b.addEventListener('click', () => selectStatement(s, idx));
           row.appendChild(b);
         });
@@ -890,6 +902,11 @@
     if (!p) return null;
     return p.perOutput || (commentType && p[commentType]) || null;
   }
+  // v5.9: target comment length per stage (Stage 4: 161-199, Stage 5: 250-300).
+  function targetRange(){
+    const p = state.filters.stage && STAGE_CHAR_LIMITS[state.filters.stage];
+    return (p && p.targetRange) || null;
+  }
   function getCharLimit(commentType){
     const preset = presetLimit(commentType);
     if (preset) return preset;
@@ -938,7 +955,8 @@
     const n = comment ? comment.length : partialText(commentType).length;
     const limit = getCharLimit(commentType);
     const label = comment ? `${n} characters` : `${n} characters so far`;
-    el.textContent = limit ? `${label} / limit ${limit}` : `${label} (no limit set)`;
+    const tr = targetRange();
+    el.textContent = (limit ? `${label} / limit ${limit}` : `${label} (no limit set)`) + (tr ? ` · target ${tr[0]}–${tr[1]}` : '');
     el.classList.toggle('over', !!(limit && n > limit));
   }
 
@@ -1009,7 +1027,7 @@
     const checks = [];   // blocking
     const warnings = []; // amber, non-blocking
 
-    const swapAllowed = state.filters.stage !== 'Stage 6' && commentType === 'strategy_to_improve';
+    const swapAllowed = state.filters.stage !== 'Stage 6';
     checks.push({
       label: `One ${catLabels[0]}, one ${catLabels[1]} and one ${catLabels[2]} ${COMMENT_TYPES[commentType]} statement selected` +
         (swapAllowed ? ' (General may replace one)' : ''),
@@ -1045,7 +1063,7 @@
       if (swapAllowed && s.category === 'G'){ generalCount++; return; }
       slotProblems.push(`slot ${i + 1} holds ${categoryLabelForProfile(profile, s.category)}, expected ${catLabels[i]}`);
     });
-    if (generalCount > 1) slotProblems.push('more than one General strategy');
+    if (generalCount > 1) slotProblems.push('more than one General statement');
     checks.push({
       label: 'Each statement is in the correct slot and builder' + (slotProblems.length ? ` — ${slotProblems.join('; ')}` : ''),
       pass: slotProblems.length === 0
@@ -1065,6 +1083,12 @@
     const limit = getCharLimit(commentType);
     if (limit){
       checks.push({ label: `Within the character limit (${comment.length} / ${limit})`, pass: comment.length <= limit });
+    }
+
+    const tr = targetRange();
+    if (tr){
+      checks.push({ label: `Within the target length (${comment.length}; target ${tr[0]}–${tr[1]})`,
+        pass: comment.length >= tr[0] && comment.length <= tr[1] });
     }
 
     // v5.3: Strengths <-> Strategies cross-check reminders (non-blocking)

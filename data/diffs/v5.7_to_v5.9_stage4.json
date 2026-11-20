@@ -1,0 +1,876 @@
+{
+  "changed": [
+    {
+      "id": "S4S_LS_P_EXT_BT",
+      "old": "Plays rhythm and melody with real control, feel and intent.",
+      "new": "Performs rhythm and melody with real control, feel and intent."
+    },
+    {
+      "id": "S4S_LS_P_THR_BT",
+      "old": "Plays rhythms and keyboard melodies accurately and in time.",
+      "new": "Performs rhythms and melodies accurately and right in time."
+    },
+    {
+      "id": "S4S_LS_P_SND_BT",
+      "old": "Plays rhythms and keyboard parts with a steady pulse.",
+      "new": "Performs rhythms and simple melodies with a steady, even pulse."
+    },
+    {
+      "id": "S4S_LS_P_ELE_BT",
+      "old": "Plays simple rhythms with a pulse that is growing steadier.",
+      "new": "Performs simple rhythms with a pulse that is growing steadier."
+    },
+    {
+      "id": "S4S_LS_P_BAS_BT",
+      "old": "Plays simple rhythms when counted in and supported.",
+      "new": "Performs simple rhythms in time when counted in and supported."
+    },
+    {
+      "id": "S4S_LS_C_SND_BT",
+      "old": "Composes four-bar rhythms that sit on a steady pulse.",
+      "new": "Composes four-bar rhythms that sit comfortably on a steady pulse."
+    },
+    {
+      "id": "S4S_LS_L_SND_BT",
+      "old": "Identifies common musical elements by ear with confidence.",
+      "new": "Identifies common musical elements by ear with real confidence."
+    },
+    {
+      "id": "S4S_LS_L_ELE_BT",
+      "old": "Identifies some musical elements by ear when guided.",
+      "new": "Identifies some musical elements by ear when guided by questions."
+    },
+    {
+      "id": "S4S_LS_L_BAS_BT",
+      "old": "Feels and recognises the beat and rhythm with support.",
+      "new": "Feels the beat and recognises simple rhythms with support."
+    },
+    {
+      "id": "S4S_STI_P_EXT_BT",
+      "old": "Bring more dynamic contrast and feel to each performance.",
+      "new": "Bring more dynamic contrast and feel to each class performance."
+    },
+    {
+      "id": "S4S_STI_P_SND_BT",
+      "old": "Practise keyboard parts slowly, then lift the tempo once secure.",
+      "new": "Count in and feel the pulse in the body before each performance."
+    },
+    {
+      "id": "S4S_STI_P_BAS_BT",
+      "old": "Clap and say each rhythm before playing it.",
+      "new": "Clap and say each rhythm aloud before playing it on instruments."
+    },
+    {
+      "id": "S4S_STI_C_SND_BT",
+      "old": "Use repetition and contrast to give rhythms a clear shape.",
+      "new": "Use repetition and contrast to give each rhythm a clear shape."
+    },
+    {
+      "id": "S4S_STI_C_ELE_BT",
+      "old": "Check each bar adds up to the right number of beats.",
+      "new": "Check that each bar adds up to the right number of beats."
+    },
+    {
+      "id": "S4S_STI_L_ELE_BT",
+      "old": "Use the elements list as a guide when listening.",
+      "new": "Use the elements list as a guide when listening to each excerpt."
+    },
+    {
+      "id": "S4S_LS_P_THR_RTG",
+      "old": "Plays chords and riffs with secure, well-timed changes.",
+      "new": "Plays chords and riffs with secure, well-timed changes in a band."
+    },
+    {
+      "id": "S4S_LS_P_SND_RTG",
+      "old": "Plays common chords with steady, even strumming.",
+      "new": "Plays common chords with steady, even strumming in time."
+    },
+    {
+      "id": "S4S_LS_P_ELE_RTG",
+      "old": "Plays simple chords, with changes becoming smoother.",
+      "new": "Plays simple chords, with changes between shapes now smoother."
+    },
+    {
+      "id": "S4S_LS_P_BAS_RTG",
+      "old": "Plays simple chord shapes and riffs with support.",
+      "new": "Plays simple chord shapes and riffs with step-by-step support."
+    },
+    {
+      "id": "S4S_LS_C_SND_RTG",
+      "old": "Writes a clear riff over the C, Am, G and F progression.",
+      "new": "Writes a clear riff over the C, Am, G and F chord progression."
+    },
+    {
+      "id": "S4S_LS_C_ELE_RTG",
+      "old": "Writes a short riff using familiar notes and patterns.",
+      "new": "Writes a short riff using familiar notes and simple patterns."
+    },
+    {
+      "id": "S4S_LS_C_BAS_RTG",
+      "old": "Writes a short riff in TAB with support.",
+      "new": "Writes a short riff in TAB with step-by-step support."
+    },
+    {
+      "id": "S4S_LS_L_SND_RTG",
+      "old": "Identifies common rock features and instruments by ear.",
+      "new": "Identifies common rock features and band instruments by ear."
+    },
+    {
+      "id": "S4S_LS_L_ELE_RTG",
+      "old": "Identifies some rock features by ear when guided.",
+      "new": "Identifies some rock features by ear when guided by questions."
+    },
+    {
+      "id": "S4S_LS_L_BAS_RTG",
+      "old": "Recognises a guitar riff in a song with support.",
+      "new": "Recognises a guitar riff and the beat in a song with support."
+    },
+    {
+      "id": "S4S_STI_P_THR_RTG",
+      "old": "Keep chord changes clean and in time at full tempo.",
+      "new": "Keep chord changes clean and in time at full song tempo."
+    },
+    {
+      "id": "S4S_STI_C_EXT_RTG",
+      "old": "Develop riffs further with syncopation and variation.",
+      "new": "Develop riffs further with syncopation, variation and contrast."
+    },
+    {
+      "id": "S4S_STI_C_SND_RTG",
+      "old": "Repeat the riff, then vary it to give the piece structure.",
+      "new": "Repeat the riff, then vary it to give the piece clear structure."
+    },
+    {
+      "id": "S4S_STI_C_ELE_RTG",
+      "old": "Use notes from each chord to shape the riff.",
+      "new": "Use notes from each chord to shape the riff over the progression."
+    },
+    {
+      "id": "S4S_STI_C_BAS_RTG",
+      "old": "Start the riff on a chord note and repeat it.",
+      "new": "Start the riff on a chord note and repeat it until secure."
+    },
+    {
+      "id": "S4S_STI_L_THR_RTG",
+      "old": "Use precise musical terms to describe rock features.",
+      "new": "Use precise musical terms to describe rock features and sounds."
+    },
+    {
+      "id": "S4S_STI_L_BAS_RTG",
+      "old": "Listen for the guitar part and describe what it does.",
+      "new": "Listen for the guitar part in a song and describe what it does."
+    },
+    {
+      "id": "S4S_LS_P_SND_SL",
+      "old": "Keeps a steady part going within a layered texture.",
+      "new": "Keeps a steady part going within a layered class texture."
+    },
+    {
+      "id": "S4S_LS_P_ELE_SL",
+      "old": "Performs a simple layer with growing steadiness.",
+      "new": "Performs a simple layer in the class texture with more control."
+    },
+    {
+      "id": "S4S_LS_P_BAS_SL",
+      "old": "Performs a simple layer alongside others with support.",
+      "new": "Performs a simple layer alongside others with teacher support."
+    },
+    {
+      "id": "S4S_LS_C_EXT_SL",
+      "old": "Builds rich, purposeful layers in a DAW with a clear musical plan.",
+      "new": "Builds rich, purposeful DAW layers with a clear musical plan."
+    },
+    {
+      "id": "S4S_LS_C_SND_SL",
+      "old": "Builds a DAW composition with clear, distinct layers.",
+      "new": "Builds a DAW composition with clear layers that fit together."
+    },
+    {
+      "id": "S4S_LS_C_ELE_SL",
+      "old": "Builds simple layers in a DAW when guided.",
+      "new": "Builds simple layers in a DAW when guided through each step."
+    },
+    {
+      "id": "S4S_LS_C_BAS_SL",
+      "old": "Builds a short DAW piece with support.",
+      "new": "Builds a short DAW piece from loops with step-by-step support."
+    },
+    {
+      "id": "S4S_LS_L_EXT_SL",
+      "old": "Analyses texture and instrumentation in real detail.",
+      "new": "Analyses texture and instrumentation by ear in real detail."
+    },
+    {
+      "id": "S4S_LS_L_THR_SL",
+      "old": "Identifies textures and instruments accurately by ear.",
+      "new": "Identifies textures and instruments accurately by ear in class."
+    },
+    {
+      "id": "S4S_LS_L_SND_SL",
+      "old": "Identifies layers and common instruments by ear.",
+      "new": "Identifies layers and common instruments by ear with confidence."
+    },
+    {
+      "id": "S4S_LS_L_ELE_SL",
+      "old": "Identifies some layers and instruments when guided.",
+      "new": "Identifies some layers and instruments when guided by questions."
+    },
+    {
+      "id": "S4S_LS_L_BAS_SL",
+      "old": "Recognises thick and thin textures with support.",
+      "new": "Recognises thick and thin textures in music with support."
+    },
+    {
+      "id": "S4S_STI_P_SND_SL",
+      "old": "Count rests carefully to come in on time.",
+      "new": "Count rests carefully to come in on time with the other layers."
+    },
+    {
+      "id": "S4S_STI_P_ELE_SL",
+      "old": "Practise one layer until it feels steady and secure.",
+      "new": "Practise one layer until it feels steady and secure in the mix."
+    },
+    {
+      "id": "S4S_STI_P_BAS_SL",
+      "old": "Follow a partner’s part to stay in time.",
+      "new": "Follow a partner’s part closely to stay in time with the group."
+    },
+    {
+      "id": "S4S_STI_C_SND_SL",
+      "old": "Give each layer a clear job in the music.",
+      "new": "Give each layer a clear job in the music and listen back often."
+    },
+    {
+      "id": "S4S_STI_C_ELE_SL",
+      "old": "Add one new layer at a time and listen back each time.",
+      "new": "Add one new layer at a time and listen back after each change."
+    },
+    {
+      "id": "S4S_STI_C_BAS_SL",
+      "old": "Start with a beat layer, then add a melody on top.",
+      "new": "Start with a beat layer in the DAW, then add a melody on top."
+    },
+    {
+      "id": "S4S_STI_L_THR_SL",
+      "old": "Describe textures using precise musical terms.",
+      "new": "Describe textures using precise musical terms and examples."
+    },
+    {
+      "id": "S4S_STI_L_SND_SL",
+      "old": "Count the layers heard in each excerpt.",
+      "new": "Count the layers heard in each excerpt and name the instruments."
+    },
+    {
+      "id": "S4S_STI_L_ELE_SL",
+      "old": "Listen for which instruments enter and drop out.",
+      "new": "Listen for which instruments enter and drop out in each excerpt."
+    },
+    {
+      "id": "S4S_STI_L_BAS_SL",
+      "old": "Listen for when the music gets thicker or thinner.",
+      "new": "Listen for when the music gets thicker or thinner, and say when."
+    },
+    {
+      "id": "S4S_LS_P_THR_JZ",
+      "old": "Plays the 12-bar blues securely with a relaxed swing feel.",
+      "new": "Performs the 12-bar blues securely with a relaxed swing feel."
+    },
+    {
+      "id": "S4S_LS_P_SND_JZ",
+      "old": "Plays the 12-bar blues with a steady pulse.",
+      "new": "Performs the 12-bar blues with a steady pulse and clear changes."
+    },
+    {
+      "id": "S4S_LS_P_ELE_JZ",
+      "old": "Plays sections of the 12-bar blues when guided.",
+      "new": "Performs sections of the 12-bar blues when guided through it."
+    },
+    {
+      "id": "S4S_LS_P_BAS_JZ",
+      "old": "Plays simple blues patterns with support.",
+      "new": "Performs simple blues patterns in time with teacher support."
+    },
+    {
+      "id": "S4S_LS_C_EXT_JZ",
+      "old": "Creates inventive blues phrases and riffs that sit right in style.",
+      "new": "Creates inventive blues phrases and riffs that are true to style."
+    },
+    {
+      "id": "S4S_LS_C_THR_JZ",
+      "old": "Creates clear, shapely melodies from the blues scale.",
+      "new": "Creates clear, shapely melodies from the blues scale with intent."
+    },
+    {
+      "id": "S4S_LS_C_SND_JZ",
+      "old": "Creates short phrases using the blues scale.",
+      "new": "Creates short, well-formed phrases using the blues scale."
+    },
+    {
+      "id": "S4S_LS_C_ELE_JZ",
+      "old": "Creates simple riffs using some blues notes.",
+      "new": "Creates simple riffs from some blues notes with more confidence."
+    },
+    {
+      "id": "S4S_LS_C_BAS_JZ",
+      "old": "Creates a short blues riff with support.",
+      "new": "Creates a short blues riff from a few notes with support."
+    },
+    {
+      "id": "S4S_LS_L_SND_JZ",
+      "old": "Identifies the 12-bar blues and swing feel by ear.",
+      "new": "Identifies the 12-bar blues and swing feel by ear confidently."
+    },
+    {
+      "id": "S4S_LS_L_ELE_JZ",
+      "old": "Identifies some jazz features by ear when guided.",
+      "new": "Identifies some jazz features by ear when guided by questions."
+    },
+    {
+      "id": "S4S_LS_L_BAS_JZ",
+      "old": "Recognises jazz instruments with support.",
+      "new": "Recognises jazz instruments and the swing feel with support."
+    },
+    {
+      "id": "S4S_STI_P_EXT_JZ",
+      "old": "Shape improvisations with phrasing, space and dynamics.",
+      "new": "Shape improvisations with phrasing, space and dynamic contrast."
+    },
+    {
+      "id": "S4S_STI_P_SND_JZ",
+      "old": "Count the 12 bars aloud to stay on track.",
+      "new": "Count the 12 bars aloud to stay on track through each chorus."
+    },
+    {
+      "id": "S4S_STI_P_ELE_JZ",
+      "old": "Practise the C7, F7 and G7 changes slowly.",
+      "new": "Practise the C7, F7 and G7 changes slowly until each is secure."
+    },
+    {
+      "id": "S4S_STI_P_BAS_JZ",
+      "old": "Practise the blues scale slowly, a few notes at a time.",
+      "new": "Practise the blues scale slowly, a few notes at a time each day."
+    },
+    {
+      "id": "S4S_STI_C_SND_JZ",
+      "old": "Repeat and vary short blues-scale phrases.",
+      "new": "Repeat and vary short blues-scale phrases to build a solo."
+    },
+    {
+      "id": "S4S_STI_C_BAS_JZ",
+      "old": "Build a riff from two notes of the blues scale.",
+      "new": "Build a riff from two notes of the blues scale and repeat it."
+    },
+    {
+      "id": "S4S_STI_L_EXT_JZ",
+      "old": "Compare jazz eras using precise musical examples.",
+      "new": "Compare jazz eras using precise musical examples from each."
+    },
+    {
+      "id": "S4S_STI_L_THR_JZ",
+      "old": "Use precise terms for swing feel and band roles.",
+      "new": "Use precise terms for swing feel and the roles in a jazz band."
+    },
+    {
+      "id": "S4S_STI_L_SND_JZ",
+      "old": "Listen for the walking bass and the chord changes.",
+      "new": "Listen for the walking bass and the chord changes in each chorus."
+    },
+    {
+      "id": "S4S_STI_L_BAS_JZ",
+      "old": "Listen for the swing feel and tap along.",
+      "new": "Listen for the swing feel and tap along with the drummer."
+    },
+    {
+      "id": "S4S_STI_G_EXT_WORK_ETHIC",
+      "old": "Take more initiative in refining work beyond what is asked.",
+      "new": "Take more initiative in refining musical work beyond what is set."
+    },
+    {
+      "id": "S4S_STI_G_THR_WORK_ETHIC",
+      "old": "Act on feedback promptly and independently.",
+      "new": "Act on feedback promptly and test each change by playing it back."
+    },
+    {
+      "id": "S4S_STI_G_SND_WORK_ETHIC",
+      "old": "Stay focused through to the end of each task.",
+      "new": "Stay focused through to the end of each practical music task."
+    },
+    {
+      "id": "S4S_STI_G_ELE_WORK_ETHIC",
+      "old": "Ask for help early when a task is unclear.",
+      "new": "Ask for help early when a musical task or part is unclear."
+    },
+    {
+      "id": "S4S_STI_G_BAS_WORK_ETHIC",
+      "old": "Complete each step of a task before moving on.",
+      "new": "Complete each step of a music task before moving on to the next."
+    },
+    {
+      "id": "S4S_STI_G_EXT_CLASSROOM_BEHAVIOUR",
+      "old": "Model focused, respectful music-making for others.",
+      "new": "Model focused, respectful music-making for others in the class."
+    },
+    {
+      "id": "S4S_STI_G_THR_CLASSROOM_BEHAVIOUR",
+      "old": "Listen respectfully when others are playing or speaking.",
+      "new": "Listen respectfully while others play, then add ideas musically."
+    },
+    {
+      "id": "S4S_STI_G_ELE_CLASSROOM_BEHAVIOUR",
+      "old": "Follow instructions promptly during practical work.",
+      "new": "Follow instructions promptly during practical music-making."
+    },
+    {
+      "id": "S4S_STI_G_BAS_CLASSROOM_BEHAVIOUR",
+      "old": "Follow class routines with teacher support.",
+      "new": "Follow music room routines each lesson with teacher support."
+    },
+    {
+      "id": "S4S_STI_G_EXT_ORGANISATION",
+      "old": "Plan rehearsal time with clear goals before each task.",
+      "new": "Plan rehearsal time with clear musical goals before each task."
+    },
+    {
+      "id": "S4S_STI_G_THR_ORGANISATION",
+      "old": "Prepare instruments and materials before each activity.",
+      "new": "Prepare instruments, music and materials before each activity."
+    },
+    {
+      "id": "S4S_STI_G_SND_ORGANISATION",
+      "old": "Keep notes and digital files organised and easy to find.",
+      "new": "Keep notes, scores and digital files organised and easy to find."
+    },
+    {
+      "id": "S4S_STI_G_ELE_ORGANISATION",
+      "old": "Bring required materials to every lesson.",
+      "new": "Bring required materials and a charged device to every lesson."
+    },
+    {
+      "id": "S4S_STI_G_BAS_ORGANISATION",
+      "old": "Use a checklist to get ready for each lesson.",
+      "new": "Use a simple checklist to get ready for each music lesson."
+    },
+    {
+      "id": "S4S_STI_G_EXT_PARTICIPATION",
+      "old": "Lead group tasks with more confidence and initiative.",
+      "new": "Lead ensemble tasks with more confidence and musical initiative."
+    },
+    {
+      "id": "S4S_STI_G_THR_PARTICIPATION",
+      "old": "Share ideas more often in class discussion and rehearsal.",
+      "new": "Share musical ideas more often in class discussion and rehearsal."
+    },
+    {
+      "id": "S4S_STI_G_SND_PARTICIPATION",
+      "old": "Contribute regularly to group music-making.",
+      "new": "Contribute regularly to group music-making and ensemble work."
+    },
+    {
+      "id": "S4S_STI_G_ELE_PARTICIPATION",
+      "old": "Join in practical tasks more readily.",
+      "new": "Join in practical music tasks more readily and with more energy."
+    },
+    {
+      "id": "S4S_STI_G_BAS_PARTICIPATION",
+      "old": "Take part in each activity with support.",
+      "new": "Take part in each music activity, starting with small roles."
+    },
+    {
+      "id": "S4S_STI_G_EXT_TASK_COMPLETION",
+      "old": "Extend finished work through independent refinement.",
+      "new": "Extend finished work through independent musical refinement."
+    },
+    {
+      "id": "S4S_STI_G_THR_TASK_COMPLETION",
+      "old": "Check work carefully before submitting.",
+      "new": "Check work carefully, by eye and by ear, before submitting."
+    },
+    {
+      "id": "S4S_STI_G_SND_TASK_COMPLETION",
+      "old": "Complete tasks fully by the due date.",
+      "new": "Complete each composition and performance task by the due date."
+    },
+    {
+      "id": "S4S_STI_G_ELE_TASK_COMPLETION",
+      "old": "Break tasks into smaller steps and tick each one off.",
+      "new": "Break music tasks into smaller steps and tick each one off."
+    },
+    {
+      "id": "S4S_STI_G_BAS_TASK_COMPLETION",
+      "old": "Finish tasks by following guided steps.",
+      "new": "Finish music tasks by following the guided steps one at a time."
+    },
+    {
+      "id": "S4S_STI_G_EXT_HOME_PRACTICE",
+      "old": "Set one clear goal for each home practice session.",
+      "new": "Set one clear musical goal for each home practice session."
+    },
+    {
+      "id": "S4S_STI_G_THR_HOME_PRACTICE",
+      "old": "Practise at home several times each week.",
+      "new": "Practise at home several times each week to build confidence."
+    },
+    {
+      "id": "S4S_STI_G_SND_HOME_PRACTICE",
+      "old": "Practise class material at home each week.",
+      "new": "Practise class material at home each week, even for a short time."
+    },
+    {
+      "id": "S4S_STI_G_ELE_HOME_PRACTICE",
+      "old": "Practise for ten minutes at home on a regular basis.",
+      "new": "Practise for ten minutes at home on a regular basis each week."
+    },
+    {
+      "id": "S4S_STI_G_BAS_HOME_PRACTICE",
+      "old": "Practise one short task at home each week.",
+      "new": "Practise one short musical task at home each week with a plan."
+    },
+    {
+      "id": "S4S_STI_G_EXT_MUSIC_PRACTICE",
+      "old": "Target tricky passages first when practising.",
+      "new": "Target the trickiest passages first when practising each piece."
+    },
+    {
+      "id": "S4S_STI_G_THR_MUSIC_PRACTICE",
+      "old": "Use a metronome to build accuracy and control.",
+      "new": "Use a metronome to build accuracy, control and steady time."
+    },
+    {
+      "id": "S4S_STI_G_SND_MUSIC_PRACTICE",
+      "old": "Practise slowly before increasing speed.",
+      "new": "Practise slowly and in time before gradually increasing speed."
+    },
+    {
+      "id": "S4S_STI_G_ELE_MUSIC_PRACTICE",
+      "old": "Repeat short sections until each one feels secure.",
+      "new": "Repeat short sections until each one feels secure and steady."
+    },
+    {
+      "id": "S4S_STI_G_BAS_MUSIC_PRACTICE",
+      "old": "Practise short sections with teacher guidance.",
+      "new": "Practise short sections with teacher guidance and a clear model."
+    }
+  ],
+  "added": [
+    {
+      "id": "S4S_LS_P_EXT_BT_PNO",
+      "text": "Plays keyboard melodies like Ode to Joy fluently and musically."
+    },
+    {
+      "id": "S4S_LS_P_THR_BT_PNO",
+      "text": "Plays keyboard melodies accurately, with a secure hand position."
+    },
+    {
+      "id": "S4S_LS_P_SND_BT_PNO",
+      "text": "Plays simple keyboard melodies steadily, keeping a clear pulse."
+    },
+    {
+      "id": "S4S_LS_P_ELE_BT_PNO",
+      "text": "Plays short keyboard melodies, with finger placement improving."
+    },
+    {
+      "id": "S4S_LS_P_BAS_BT_PNO",
+      "text": "Plays short keyboard patterns when guided note by note."
+    },
+    {
+      "id": "S4S_STI_P_EXT_BT_PNO",
+      "text": "Shape keyboard melodies with dynamics and smooth, linked phrases."
+    },
+    {
+      "id": "S4S_STI_P_THR_BT_PNO",
+      "text": "Keep keyboard fingering consistent so melodies flow at tempo."
+    },
+    {
+      "id": "S4S_STI_P_SND_BT_PNO",
+      "text": "Practise keyboard parts slowly, then lift the tempo once secure."
+    },
+    {
+      "id": "S4S_STI_P_ELE_BT_PNO",
+      "text": "Practise each keyboard phrase hands separately until secure."
+    },
+    {
+      "id": "S4S_STI_P_BAS_BT_PNO",
+      "text": "Find the first keyboard note, then add a few more notes at once."
+    },
+    {
+      "id": "S4S_LS_P_EXT_SL_GTR",
+      "text": "Plays guitar layers in precise time, blending well with others."
+    },
+    {
+      "id": "S4S_LS_P_THR_SL_GTR",
+      "text": "Holds a guitar part securely while listening to the other layers."
+    },
+    {
+      "id": "S4S_LS_P_SND_SL_GTR",
+      "text": "Keeps a steady strummed guitar part going in a layered texture."
+    },
+    {
+      "id": "S4S_LS_P_ELE_SL_GTR",
+      "text": "Plays a simple guitar layer, keeping time with others more often."
+    },
+    {
+      "id": "S4S_LS_P_BAS_SL_GTR",
+      "text": "Plays a simple guitar layer alongside others with support."
+    },
+    {
+      "id": "S4S_LS_P_EXT_SL_PNO",
+      "text": "Plays keyboard layers in precise time, blending well with others."
+    },
+    {
+      "id": "S4S_LS_P_THR_SL_PNO",
+      "text": "Holds a keyboard part securely while listening to other layers."
+    },
+    {
+      "id": "S4S_LS_P_SND_SL_PNO",
+      "text": "Keeps a steady keyboard part going in a layered class texture."
+    },
+    {
+      "id": "S4S_LS_P_ELE_SL_PNO",
+      "text": "Plays a simple keyboard layer, keeping time with others more."
+    },
+    {
+      "id": "S4S_LS_P_BAS_SL_PNO",
+      "text": "Plays a simple keyboard layer alongside others with support."
+    },
+    {
+      "id": "S4S_STI_P_EXT_SL_GTR",
+      "text": "Balance guitar volume and tone so each layer in the mix is heard."
+    },
+    {
+      "id": "S4S_STI_P_THR_SL_GTR",
+      "text": "Lock guitar strumming in with the drums and bass in each layer."
+    },
+    {
+      "id": "S4S_STI_P_SND_SL_GTR",
+      "text": "Count rests carefully to bring the guitar in on time with others."
+    },
+    {
+      "id": "S4S_STI_P_ELE_SL_GTR",
+      "text": "Practise the guitar layer slowly until the strumming is steady."
+    },
+    {
+      "id": "S4S_STI_P_BAS_SL_GTR",
+      "text": "Follow a partner’s part closely to keep the guitar layer in time."
+    },
+    {
+      "id": "S4S_STI_P_EXT_SL_PNO",
+      "text": "Balance keyboard dynamics so each layer in the ensemble is heard."
+    },
+    {
+      "id": "S4S_STI_P_THR_SL_PNO",
+      "text": "Lock the keyboard part in with the drums and bass in each layer."
+    },
+    {
+      "id": "S4S_STI_P_SND_SL_PNO",
+      "text": "Count rests carefully to bring the keyboard in on time."
+    },
+    {
+      "id": "S4S_STI_P_ELE_SL_PNO",
+      "text": "Practise the keyboard layer hands separately until it is steady."
+    },
+    {
+      "id": "S4S_STI_P_BAS_SL_PNO",
+      "text": "Follow a partner’s part closely to keep the keyboard in time."
+    },
+    {
+      "id": "S4S_LS_P_EXT_JZ_GTR",
+      "text": "Improvises on guitar with confidence and swing over the blues."
+    },
+    {
+      "id": "S4S_LS_P_THR_JZ_GTR",
+      "text": "Plays the 12-bar blues on guitar securely, with a relaxed swing."
+    },
+    {
+      "id": "S4S_LS_P_SND_JZ_GTR",
+      "text": "Plays the 12-bar blues on guitar with steady, even strumming."
+    },
+    {
+      "id": "S4S_LS_P_ELE_JZ_GTR",
+      "text": "Plays sections of the 12-bar blues on guitar when guided."
+    },
+    {
+      "id": "S4S_LS_P_BAS_JZ_GTR",
+      "text": "Plays simple blues chord shapes on guitar with teacher support."
+    },
+    {
+      "id": "S4S_LS_P_EXT_JZ_PNO",
+      "text": "Improvises on keyboard with confidence and real swing over blues."
+    },
+    {
+      "id": "S4S_LS_P_THR_JZ_PNO",
+      "text": "Plays the 12-bar blues on keyboard securely, with relaxed swing."
+    },
+    {
+      "id": "S4S_LS_P_SND_JZ_PNO",
+      "text": "Plays the 12-bar blues on keyboard with a steady left-hand pulse."
+    },
+    {
+      "id": "S4S_LS_P_ELE_JZ_PNO",
+      "text": "Plays sections of the 12-bar blues on keyboard when guided."
+    },
+    {
+      "id": "S4S_LS_P_BAS_JZ_PNO",
+      "text": "Plays simple blues patterns on keyboard with teacher support."
+    },
+    {
+      "id": "S4S_STI_P_EXT_JZ_GTR",
+      "text": "Shape guitar solos with phrasing, space and dynamic contrast."
+    },
+    {
+      "id": "S4S_STI_P_THR_JZ_GTR",
+      "text": "Keep guitar comping relaxed and swinging right through the form."
+    },
+    {
+      "id": "S4S_STI_P_SND_JZ_GTR",
+      "text": "Count the 12 bars aloud while strumming to stay on track."
+    },
+    {
+      "id": "S4S_STI_P_ELE_JZ_GTR",
+      "text": "Practise the C7, F7 and G7 shapes on guitar slowly until secure."
+    },
+    {
+      "id": "S4S_STI_P_BAS_JZ_GTR",
+      "text": "Practise the blues scale on guitar slowly, a few frets at a time."
+    },
+    {
+      "id": "S4S_STI_P_EXT_JZ_PNO",
+      "text": "Shape keyboard solos with phrasing, space and dynamic contrast."
+    },
+    {
+      "id": "S4S_STI_P_THR_JZ_PNO",
+      "text": "Keep keyboard comping relaxed and swinging through the form."
+    },
+    {
+      "id": "S4S_STI_P_SND_JZ_PNO",
+      "text": "Count the 12 bars aloud while playing keyboard to stay on track."
+    },
+    {
+      "id": "S4S_STI_P_ELE_JZ_PNO",
+      "text": "Practise C7, F7 and G7 chords on keyboard slowly until secure."
+    },
+    {
+      "id": "S4S_STI_P_BAS_JZ_PNO",
+      "text": "Practise the blues scale on keyboard slowly, a few keys at once."
+    },
+    {
+      "id": "S4S_LS_G_EXT_ENSEMBLE_AWARENESS",
+      "text": "Leads by ear in ensemble work, listening and adjusting with ease."
+    },
+    {
+      "id": "S4S_LS_G_THR_ENSEMBLE_AWARENESS",
+      "text": "Listens closely and fits in well when making music with others."
+    },
+    {
+      "id": "S4S_LS_G_SND_ENSEMBLE_AWARENESS",
+      "text": "Works well in ensembles and keeps an ear on the other parts."
+    },
+    {
+      "id": "S4S_LS_G_ELE_ENSEMBLE_AWARENESS",
+      "text": "Joins in ensemble work and is learning to listen to other parts."
+    },
+    {
+      "id": "S4S_LS_G_BAS_ENSEMBLE_AWARENESS",
+      "text": "Plays alongside others in group pieces with teacher support."
+    },
+    {
+      "id": "S4S_LS_G_EXT_MUSICAL_EAR",
+      "text": "Shows a sharp musical ear, picking up parts and ideas quickly."
+    },
+    {
+      "id": "S4S_LS_G_THR_MUSICAL_EAR",
+      "text": "Learns music well by ear and hears when something is out of time."
+    },
+    {
+      "id": "S4S_LS_G_SND_MUSICAL_EAR",
+      "text": "Uses a developing ear to copy rhythms and melodies accurately."
+    },
+    {
+      "id": "S4S_LS_G_ELE_MUSICAL_EAR",
+      "text": "Copies short rhythms and melodies by ear with growing accuracy."
+    },
+    {
+      "id": "S4S_LS_G_BAS_MUSICAL_EAR",
+      "text": "Echoes short rhythms by ear when each one is modelled clearly."
+    },
+    {
+      "id": "S4S_LS_G_EXT_REHEARSAL_FOCUS",
+      "text": "Rehearses with real focus, refining parts without being asked."
+    },
+    {
+      "id": "S4S_LS_G_THR_REHEARSAL_FOCUS",
+      "text": "Uses rehearsal time well and works steadily to improve each part."
+    },
+    {
+      "id": "S4S_LS_G_SND_REHEARSAL_FOCUS",
+      "text": "Stays on task in rehearsal and works hard to get parts right."
+    },
+    {
+      "id": "S4S_LS_G_ELE_REHEARSAL_FOCUS",
+      "text": "Works on parts in rehearsal and is building steadier focus."
+    },
+    {
+      "id": "S4S_LS_G_BAS_REHEARSAL_FOCUS",
+      "text": "Works on rehearsal tasks with clear steps and teacher support."
+    },
+    {
+      "id": "S4S_LS_G_EXT_CREATIVE_RISK",
+      "text": "Takes creative risks and tries bold new ideas with confidence."
+    },
+    {
+      "id": "S4S_LS_G_THR_CREATIVE_RISK",
+      "text": "Tries new musical ideas willingly and shapes each one with care."
+    },
+    {
+      "id": "S4S_LS_G_SND_CREATIVE_RISK",
+      "text": "Is willing to try new musical ideas and build on each in class."
+    },
+    {
+      "id": "S4S_LS_G_ELE_CREATIVE_RISK",
+      "text": "Tries new musical ideas in class when given a starting point."
+    },
+    {
+      "id": "S4S_LS_G_BAS_CREATIVE_RISK",
+      "text": "Tries simple musical ideas with encouragement and a clear model."
+    },
+    {
+      "id": "S4S_LS_G_EXT_CARE_OF_INSTRUMENTS",
+      "text": "Handles instruments and gear with real care and helps others."
+    },
+    {
+      "id": "S4S_LS_G_THR_CARE_OF_INSTRUMENTS",
+      "text": "Sets up and packs away instruments and gear with care and skill."
+    },
+    {
+      "id": "S4S_LS_G_SND_CARE_OF_INSTRUMENTS",
+      "text": "Looks after instruments and equipment well during practical work."
+    },
+    {
+      "id": "S4S_LS_G_ELE_CARE_OF_INSTRUMENTS",
+      "text": "Looks after instruments and equipment by following routines."
+    },
+    {
+      "id": "S4S_LS_G_BAS_CARE_OF_INSTRUMENTS",
+      "text": "Handles instruments safely with clear routines and support."
+    },
+    {
+      "id": "S4S_LS_G_EXT_ENGAGEMENT",
+      "text": "Brings real energy, curiosity and focus to class music-making."
+    },
+    {
+      "id": "S4S_LS_G_THR_ENGAGEMENT",
+      "text": "Engages enthusiastically and contributes well to class music."
+    },
+    {
+      "id": "S4S_LS_G_SND_ENGAGEMENT",
+      "text": "Brings energy and focus to practical music-making in class."
+    },
+    {
+      "id": "S4S_LS_G_ELE_ENGAGEMENT",
+      "text": "Joins in class music-making readily and is growing in confidence."
+    },
+    {
+      "id": "S4S_LS_G_BAS_ENGAGEMENT",
+      "text": "Takes part in class music-making with encouragement and support."
+    }
+  ]
+}

@@ -12,6 +12,7 @@ bank = bankdoc['statements']; meta = bankdoc['metadata']
 PROFILES = [p for p in meta['commentProfiles'] if p.startswith('Stage 6')]
 
 LIM4 = (meta.get('sentralCharLimits', {}).get('Stage 4') or {}).get('perOutput', 150)
+N4 = sum(1 for x in json.load(open(sys.argv[2], encoding='utf-8'))['statements'] if x['stage'] == 'Stage 4' and x.get('statementLength') == 'short')
 SHORT4 = any(x.get('statementLength') == 'short' and x['stage'] == 'Stage 4' for x in bank)
 def pick(**kw):
     # v5.6: Stage 4 shows the short set when a fixed limit applies
@@ -394,10 +395,10 @@ with sync_playwright() as p:
         f'copy before={before} after={copy_on("LS")}; check="{[l for l in v.split(chr(10)) if "instrument" in l][:1]}"',
         before and not copy_on('LS') and 'Guitar statement' in v)
     load(); chip('stage', 'Stage 4')
-    dis = page.locator('#filter-instrument .chip[data-value="Guitar"]').get_attribute('class')
-    page.click('#filter-instrument .chip[data-value="Guitar"]', force=True)
+    dis = page.locator('#filter-instrument .chip[data-value="Voice"]').get_attribute('class')
+    page.click('#filter-instrument .chip[data-value="Voice"]', force=True)
     cnt = page.locator('#bank-grid .card').count()
-    rec('I04', 'Stage 4: click Guitar chip', 'disabled; bank not emptied', f'class="{dis}"; bank cards={cnt}', 'disabled' in dis and cnt > 0)
+    rec('I04', 'Stage 4: click Voice chip (still off in Stage 4)', 'disabled; bank not emptied', f'class="{dis}"; bank cards={cnt}', 'disabled' in dis and cnt > 0)
     if page.locator('#next-student').count():
         load(); chip('stage', 'Stage 6'); chip('course', 'Music 1'); chip('stageCourse', 'Preliminary'); chip('topic', 'Baroque Music'); chip('tier', 'Sound')
         for ct in ('learning_strength', 'strategy_to_improve'):
@@ -418,8 +419,8 @@ with sync_playwright() as p:
         rec('L01', 'Stage 4 Sentral limit', f'{LIM4} per box, fixed', f'LS="{inp.input_value()}" disabled={inp.is_disabled()}; STI="{page.locator("#charlimit-STI").input_value()}"',
             inp.input_value() == str(LIM4) and inp.is_disabled() and page.locator('#charlimit-STI').input_value() == str(LIM4))
         vis = bank_ids()
-        rec('L02', 'Stage 4 bank shows the short set only', '155 short statements', f'{len(vis)} shown; all short={all(byid[i].get("statementLength") == "short" for i in vis)}',
-            len(vis) == 155 and all(byid[i].get('statementLength') == 'short' for i in vis))
+        rec('L02', 'Stage 4 bank shows the short set only', f'{N4} short statements', f'{len(vis)} shown; all short={all(byid[i].get("statementLength") == "short" for i in vis)}',
+            len(vis) == N4 and all(byid[i].get('statementLength') == 'short' for i in vis))
         short = [x for x in bank if x['stage'] == 'Stage 4' and x.get('statementLength') == 'short']
         longest = {(ct, c): max((x for x in short if x['commentType'] == ct and x['category'] == c), key=lambda x: len(x['text']))
                    for ct in ('learning_strength', 'strategy_to_improve') for c in 'PCLG' if any(x['commentType'] == ct and x['category'] == c for x in short)}
@@ -474,6 +475,58 @@ with sync_playwright() as p:
         st = page.locator('#card-status-LS').inner_text()
         rec('K05', 'Complete comment status', 'Ready to copy, Copy enabled', f'status="{st}"; copy={copy_on("LS")}',
             'Ready to copy' in st and copy_on('LS'))
+
+    # ---------------- v5.9: target ranges, General strengths, Guitar/Piano ----------------
+    import itertools as _it
+    def combos_range(stage):
+        pool = [x for x in bank if x['stage'] == stage and (stage != 'Stage 4' or x.get('statementLength') == 'short')]
+        lo, hi = 10**9, 0
+        for ct in ('learning_strength', 'strategy_to_improve'):
+            L = {c: [len(x['text']) for x in pool if x['commentType'] == ct and x['category'] == c] for c in 'PCLG'}
+            if not L['P']: continue
+            slots = [L['P'], L['C'], L['L']]
+            opts = [slots] + ([slots[:i] + [L['G']] + slots[i+1:] for i in range(3)] if L['G'] else [])
+            for o in opts:
+                lo = min(lo, sum(min(v) for v in o) + 2); hi = max(hi, sum(max(v) for v in o) + 2)
+        return lo, hi
+    tr4 = (meta.get('sentralCharLimits', {}).get('Stage 4') or {}).get('targetRange')
+    tr5 = (meta.get('sentralCharLimits', {}).get('Stage 5') or {}).get('targetRange')
+    if tr4 and tr5:
+        r4, r5 = combos_range('Stage 4'), combos_range('Stage 5')
+        rec('W01', 'Every Stage 4 comment (incl. a General swap) in target range', f'{tr4[0]}-{tr4[1]}', f'{r4[0]}-{r4[1]}', tr4[0] <= r4[0] and r4[1] <= tr4[1])
+        rec('W02', 'Every Stage 5 comment (incl. a General swap) in target range', f'{tr5[0]}-{tr5[1]}', f'{r5[0]}-{r5[1]}', tr5[0] <= r5[0] and r5[1] <= tr5[1])
+        load(); chip('stage', 'Stage 4')
+        g = pick(stage='Stage 4', commentType='learning_strength', category='G')
+        select(pick(stage='Stage 4', commentType='learning_strength', category='P')['id'])
+        select(pick(stage='Stage 4', commentType='learning_strength', category='C')['id'])
+        page.locator(f'#bank-grid .card[data-id="{g["id"]}"] .swap-btn').nth(2).click()
+        cnt_txt = page.locator('#charcount-LS').inner_text()
+        rec('W03', 'Stage 4 General strength swapped into Listening', 'comment ends with it, copyable, target shown',
+            f'copy={copy_on("LS")}; ends={preview("LS").endswith(g["text"])}; count="{cnt_txt}"',
+            copy_on('LS') and preview('LS').endswith(g['text']) and f'target {tr4[0]}' in cnt_txt)
+        g2 = [x for x in bank if x['stage'] == 'Stage 4' and x['commentType'] == 'learning_strength' and x['category'] == 'G'][1]
+        msg = select(g2['id'])
+        page.locator(f'#bank-grid .card[data-id="{g2["id"]}"] .swap-btn').nth(0).click()
+        sel_g = page.evaluate("() => window.__commentBuilderTest.state.selected.learning_strength.filter(s => s && s.statement.category === 'G').length")
+        rec('W04', 'Only one General statement per comment', 'second General refused', f'General in comment={sel_g}', sel_g == 1)
+        load(); chip('stage', 'Stage 4')
+        cls = {v: page.locator(f'#filter-instrument .chip[data-value="{v}"]').get_attribute('class') for v in ('Guitar', 'Piano', 'Drums')}
+        chip('instrument', 'Piano'); chip('category', 'P')
+        vis = bank_ids()
+        insts = sorted({byid[i]['instrument'] for i in vis})
+        rec('W05', 'Stage 4 Piano chip', 'Guitar/Piano on, Drums off; Piano + generic shown',
+            f'{ {k: "disabled" in v for k, v in cls.items()} }; instruments={insts}; n={len(vis)}',
+            'disabled' not in cls['Guitar'] and 'disabled' not in cls['Piano'] and 'disabled' in cls['Drums'] and insts == ['Instrument', 'Piano'] and len(vis) > 0)
+        load(); chip('stage', 'Stage 5'); chip('instrument', 'Guitar')
+        g5 = pick(stage='Stage 5', commentType='learning_strength', category='G')
+        select(pick(stage='Stage 5', commentType='learning_strength', category='P', instrument='Guitar')['id'])
+        select(pick(stage='Stage 5', commentType='learning_strength', category='L')['id'])
+        page.locator(f'#bank-grid .card[data-id="{g5["id"]}"] .swap-btn').nth(1).click()
+        n5 = len(preview('LS'))
+        rec('W06', 'Stage 5 General strength swapped into Composition', f'copyable, {tr5[0]}-{tr5[1]} chars',
+            f'{n5} chars copy={copy_on("LS")}', copy_on('LS') and tr5[0] <= n5 <= tr5[1])
+    else:
+        for t in ('W01', 'W02', 'W03', 'W04', 'W05', 'W06'): rec(t, 'v5.9 target ranges', 'present', 'not in this build', False)
 
     # ---------------- A01 keyboard ----------------
     load()

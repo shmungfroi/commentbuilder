@@ -122,6 +122,7 @@ head = rep(head, '<h3 class="strategy">Strategies to Improve</h3>\n        <div 
            '      <div class="review-block">\n        <h3>Strengths ↔ Strategies cross-check</h3>\n'
            '        <div class="review-text empty" id="crosscheck" aria-live="polite">Shown once both outputs have at least one statement.</div>\n      </div>')
 head = rep(head, '<!-- BUILDERS PANEL -->\n  <div class="panel">', '<!-- BUILDERS PANEL -->\n  <div class="panel" id="builders-panel">')
+head = rep(head, '<summary>General Subcategory (Strategies — General only)</summary>', '<summary>General area (General only)</summary>')
 head = rep(head, '<button id="reset-filters">', '<button type="button" id="reset-filters">')
 
 head = rep(head, '<!-- LEARNING STRENGTHS BUILDER -->',

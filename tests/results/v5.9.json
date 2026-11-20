@@ -1,0 +1,593 @@
+{
+ "build": "v5.9",
+ "results": [
+  {
+   "id": "D01",
+   "case": "Load offline",
+   "expected": "3785 loaded, no JS errors",
+   "actual": "3785 statements loaded \u00b7 app v5.9 \u00b7 data 5.9",
+   "passed": true
+  },
+  {
+   "id": "D02",
+   "case": "Embedded bank == statement_bank_v5.1.json",
+   "expected": "0 record changes",
+   "actual": "identical=True; changed records=0",
+   "passed": true
+  },
+  {
+   "id": "T01",
+   "case": "No sentence ends \"...as part of senior music study\"",
+   "expected": "0",
+   "actual": "0",
+   "passed": true
+  },
+  {
+   "id": "T02",
+   "case": "No placeholder topic labels in sentence text",
+   "expected": "0",
+   "actual": "0",
+   "passed": true
+  },
+  {
+   "id": "T03",
+   "case": "No \"limited\" in Learning Strengths",
+   "expected": "0",
+   "actual": "0",
+   "passed": true
+  },
+  {
+   "id": "F1",
+   "case": "No Stage: try to mix Stage 4/6/5 in one comment",
+   "expected": "selection blocked; copy disabled",
+   "actual": "['disabled:Choose a Stage first', 'disabled:Choose a Stage first', 'disabled:Choose a Stage first']; copy=False",
+   "passed": true
+  },
+  {
+   "id": "F1b",
+   "case": "No Stage: on-screen guidance",
+   "expected": "notice explains Stage needed",
+   "actual": "Choose a Stage first \u2014 statements can be browsed but not selected until the reporting context is set.",
+   "passed": true
+  },
+  {
+   "id": "F2",
+   "case": "Stage 6, no Course/Level: try to mix M1/M2, Prelim/HSC",
+   "expected": "selection blocked; copy disabled",
+   "actual": "['disabled:Choose Course and Stage Course first', 'disabled:Choose Course and Stage Course first', 'disabled:Choose Course and Stage Course first']; copy=False",
+   "passed": true
+  },
+  {
+   "id": "F2b",
+   "case": "Stage 6, Course set but not Stage Course",
+   "expected": "still blocked",
+   "actual": "disabled:Choose Course and Stage Course first",
+   "passed": true
+  },
+  {
+   "id": "V03d",
+   "case": "Injected Stage 5 record into Stage 4 comment",
+   "expected": "context check fails; copy disabled",
+   "actual": "copy=False; \u2718 All statements match the reporting context (Stage 4) \u2014 slot 3 is Stage 5",
+   "passed": true
+  },
+  {
+   "id": "V03e",
+   "case": "Copy forced on an invalid comment (stale enabled button)",
+   "expected": "copy-time re-check refuses; clipboard untouched",
+   "actual": "msg=\"Not copied \u2014 fix the items marked \u2718 first.\"; clipboard='SENTINEL'",
+   "passed": true
+  },
+  {
+   "id": "S04",
+   "case": "Stage 4 Standard, unit Jazz, both outputs",
+   "expected": "P/C/L; unit filter exact; both copyable",
+   "actual": "labels=['1. Performance', '2. Composition', '3. Listening']; bank all Jazz=True (50); LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "C01",
+   "case": "Clipboard equals preview (Stage 4 STI)",
+   "expected": "identical",
+   "actual": "match=True",
+   "passed": true
+  },
+  {
+   "id": "Q1-unit",
+   "case": "Stage 4: three different units",
+   "expected": "allowed + amber warning",
+   "actual": "copy=True; warning=True",
+   "passed": true
+  },
+  {
+   "id": "Q1-unit2",
+   "case": "Stage 4: change Unit chip after selecting",
+   "expected": "selections kept (browse filter)",
+   "actual": "filled=[True, True, True]",
+   "passed": true
+  },
+  {
+   "id": "S05",
+   "case": "Stage 5 Standard, Guitar, both outputs",
+   "expected": "P bank = Guitar + generic only; both copyable",
+   "actual": "bank P all Guitar/generic=True (100); LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 1 Preliminary \u2014 Performance",
+   "expected": "P/M/A; no leaks; both copyable",
+   "actual": "360 shown, leaks=0, labels=Performance/Musicology/Aural, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 1 Preliminary \u2014 Composition",
+   "expected": "C/M/A; no leaks; both copyable",
+   "actual": "360 shown, leaks=0, labels=Composition/Musicology/Aural, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 1 Preliminary \u2014 Viva Voce",
+   "expected": "P/V/G; no leaks; both copyable",
+   "actual": "360 shown, leaks=0, labels=Performance/Viva Voce/General Musicianship, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 1 Preliminary \u2014 Musicianship",
+   "expected": "P/A/G; no leaks; both copyable",
+   "actual": "360 shown, leaks=0, labels=Performance/Aural/General Musicianship, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 1 Preliminary \u2014 Composition/Musicianship",
+   "expected": "C/A/G; no leaks; both copyable",
+   "actual": "360 shown, leaks=0, labels=Composition/Aural/General Musicianship, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 1 HSC \u2014 Performance",
+   "expected": "P/M/A; no leaks; both copyable",
+   "actual": "120 shown, leaks=0, labels=Performance/Musicology/Aural, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 1 HSC \u2014 Composition",
+   "expected": "C/M/A; no leaks; both copyable",
+   "actual": "120 shown, leaks=0, labels=Composition/Musicology/Aural, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 1 HSC \u2014 Viva Voce",
+   "expected": "P/V/G; no leaks; both copyable",
+   "actual": "120 shown, leaks=0, labels=Performance/Viva Voce/General Musicianship, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 1 HSC \u2014 Musicianship",
+   "expected": "P/A/G; no leaks; both copyable",
+   "actual": "120 shown, leaks=0, labels=Performance/Aural/General Musicianship, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 1 HSC \u2014 Composition/Musicianship",
+   "expected": "C/A/G; no leaks; both copyable",
+   "actual": "120 shown, leaks=0, labels=Composition/Aural/General Musicianship, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 2 Preliminary \u2014 Performance",
+   "expected": "P/M/A; no leaks; both copyable",
+   "actual": "480 shown, leaks=0, labels=Performance/Musicology/Aural, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 2 Preliminary \u2014 Composition",
+   "expected": "C/M/A; no leaks; both copyable",
+   "actual": "480 shown, leaks=0, labels=Composition/Musicology/Aural, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 2 Preliminary \u2014 Viva Voce",
+   "expected": "P/V/G; no leaks; both copyable",
+   "actual": "480 shown, leaks=0, labels=Performance/Viva Voce/General Musicianship, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 2 Preliminary \u2014 Musicianship",
+   "expected": "P/A/G; no leaks; both copyable",
+   "actual": "480 shown, leaks=0, labels=Performance/Aural/General Musicianship, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 2 Preliminary \u2014 Composition/Musicianship",
+   "expected": "C/A/G; no leaks; both copyable",
+   "actual": "480 shown, leaks=0, labels=Composition/Aural/General Musicianship, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 2 HSC \u2014 Performance",
+   "expected": "P/M/A; no leaks; both copyable",
+   "actual": "360 shown, leaks=0, labels=Performance/Musicology/Aural, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 2 HSC \u2014 Composition",
+   "expected": "C/M/A; no leaks; both copyable",
+   "actual": "360 shown, leaks=0, labels=Composition/Musicology/Aural, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 2 HSC \u2014 Viva Voce",
+   "expected": "P/V/G; no leaks; both copyable",
+   "actual": "360 shown, leaks=0, labels=Performance/Viva Voce/General Musicianship, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 2 HSC \u2014 Musicianship",
+   "expected": "P/A/G; no leaks; both copyable",
+   "actual": "360 shown, leaks=0, labels=Performance/Aural/General Musicianship, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "S06",
+   "case": "Music 2 HSC \u2014 Composition/Musicianship",
+   "expected": "C/A/G; no leaks; both copyable",
+   "actual": "360 shown, leaks=0, labels=Composition/Aural/General Musicianship, LS=True STI=True",
+   "passed": true
+  },
+  {
+   "id": "Q1-topic",
+   "case": "Music 1 Prelim: three different topics",
+   "expected": "allowed + amber warning",
+   "actual": "copy=True; warning=True",
+   "passed": true
+  },
+  {
+   "id": "Q1-topic2",
+   "case": "Change Topic chip after selecting",
+   "expected": "selections kept",
+   "actual": "filled=[True, True, True]",
+   "passed": true
+  },
+  {
+   "id": "V03",
+   "case": "Change Course / Stage Course / Profile / Stage after selecting",
+   "expected": "all clear selections",
+   "actual": "course=[False, False, False] level=[False, False, False] profile=[False, False, False] stage=[False, False, False]",
+   "passed": true
+  },
+  {
+   "id": "V04",
+   "case": "Drop Strategy in Strengths; Composition in Performance zone",
+   "expected": "both rejected + explained",
+   "actual": "\"That is a \"Strategies to Improve\" statement \u2014 drop it in the Strategies to Improve builder.\" / \"That is a Composition statement \u2014 drop it in the Performance zone.\"",
+   "passed": true
+  },
+  {
+   "id": "V02",
+   "case": "Two of three slots",
+   "expected": "copy disabled",
+   "actual": "copy=False",
+   "passed": true
+  },
+  {
+   "id": "V01",
+   "case": "Three valid slots",
+   "expected": "copy enabled, all checks \u2714",
+   "actual": "copy=True; \u2718 count=0",
+   "passed": true
+  },
+  {
+   "id": "R01",
+   "case": "Reset Filters",
+   "expected": "selections and Stage kept",
+   "actual": "LS=[True, True, True] STI=[True, True, True] stage active=True",
+   "passed": true
+  },
+  {
+   "id": "R02",
+   "case": "Clear one output",
+   "expected": "other unaffected",
+   "actual": "LS=[False, False, False] STI=[True, True, True]",
+   "passed": true
+  },
+  {
+   "id": "V06",
+   "case": "Sentence counter: ?, !, e.g., decimals, quotes, 4 sentences, missing stop",
+   "expected": "all counts correct",
+   "actual": "mismatches=[]",
+   "passed": true
+  },
+  {
+   "id": "V05",
+   "case": "Synthetic policy breaches (pronoun, them, first person, \"the student\", 2 sentences, missing stop)",
+   "expected": "each rejected",
+   "actual": "pronoun: rejected; them: rejected; first person: rejected; the student: rejected; two sentences: rejected; missing stop: rejected",
+   "passed": true
+  },
+  {
+   "id": "V07",
+   "case": "Character count; limit = length\u22121, then = length; persists on reload",
+   "expected": "count visible; over \u2192 copy disabled; at limit \u2192 enabled; limit remembered",
+   "actual": "\"279 characters (no limit set) \u00b7 target 250\u2013300\" \u2192 over: copy=False \"279 characters / limit 278 \u00b7 target 250\u2013300\"; at limit: copy=True; after reload limit=278",
+   "passed": true
+  },
+  {
+   "id": "V07b",
+   "case": "Default limit",
+   "expected": "blank (no Sentral limit assumed)",
+   "actual": "\"\"",
+   "passed": true
+  },
+  {
+   "id": "Q4",
+   "case": "Stage 4 Strategies: General replaces Listening; 2nd General refused",
+   "expected": "copyable with note; second refused",
+   "actual": "copy=True; note=\"General \u2014 in place of Listening\"; 2nd msg=\"Only one General statement per comment \u2014 remove the one in slot 3 first.\"",
+   "passed": true
+  },
+  {
+   "id": "Q4b",
+   "case": "Drag General onto Performance slot",
+   "expected": "accepted as swap",
+   "actual": "copy=True; filled=[True, True, True]",
+   "passed": true
+  },
+  {
+   "id": "Q4c",
+   "case": "Stage 6 Viva Voce (G is a normal slot)",
+   "expected": "no swap buttons",
+   "actual": "swap buttons=0",
+   "passed": true
+  },
+  {
+   "id": "F5",
+   "case": "Stage 4/5 category chip for G",
+   "expected": "\"General\"",
+   "actual": "General",
+   "passed": true
+  },
+  {
+   "id": "F6",
+   "case": "Click the active profile chip",
+   "expected": "stays selected",
+   "actual": "active=1",
+   "passed": true
+  },
+  {
+   "id": "X01",
+   "case": "Stage 5, student instrument Guitar: try a Voice strategy",
+   "expected": "prevented (v5.4 instrument rule); Guitar strength kept",
+   "actual": "LS=[True, True, True] STI=[False, True, True]; panel=\"\u2714 No instrument, topic/unit or tier inconsistencies found be\"",
+   "passed": true
+  },
+  {
+   "id": "X02",
+   "case": "Generic \"Instrument\" vs Guitar, same tiers",
+   "expected": "no reminder (generic is compatible)",
+   "actual": "panel=\"\u2714 No instrument, topic/unit or tier inconsistencies found between Strengths and Strategies\"",
+   "passed": true
+  },
+  {
+   "id": "X03",
+   "case": "Music 2 Prelim: Strengths Baroque vs Strategies Classical",
+   "expected": "topic reminder",
+   "actual": "panel=\"\u26a0 Topic differs (Strengths: Baroque Music; Strategies: Classical Music)Reminder only \u2014 copying is still allowe\"",
+   "passed": true
+  },
+  {
+   "id": "X04",
+   "case": "Stage 4: Strengths Jazz vs Strategies Sound Lab",
+   "expected": "unit reminder",
+   "actual": "panel=\"\u26a0 Unit differs (Strengths: Jazz; Strategies: Sound Lab)Reminder only \u2014 copying is still allowed. Check both co\"",
+   "passed": true
+  },
+  {
+   "id": "X05",
+   "case": "Tier gap: P Extensive vs Elementary (2 levels); C Sound vs Thorough (1 level)",
+   "expected": "P flagged, C not",
+   "actual": "panel=\"\u26a0 Performance tier gap (Strengths: Extensive; Strategies: Elementary)Reminder only \u2014 copying is still allowed. Check bot\"",
+   "passed": true
+  },
+  {
+   "id": "X06",
+   "case": "General (Basic) swapped into Listening vs Listening strength (Extensive)",
+   "expected": "not a tier gap (different category)",
+   "actual": "panel=\"\u2714 No instrument, topic/unit or tier inconsistencies found between Strengths and Strategies.\"",
+   "passed": true
+  },
+  {
+   "id": "X07",
+   "case": "Only Strengths started",
+   "expected": "cross-check waits for both",
+   "actual": "panel=\"Shown once both outputs have at least one statement.\"",
+   "passed": true
+  },
+  {
+   "id": "I01",
+   "case": "Stage 5, no instrument chosen: Performance vs Composition",
+   "expected": "P blocked with reason; C selectable; notice shown",
+   "actual": "P=disabled:Choose the student\u2019s instrument first; C=ok; notice=\"Choose the student\u2019s instrument (or \u201cInstrument\u201d for generic\"",
+   "passed": true
+  },
+  {
+   "id": "I02",
+   "case": "Choose Guitar",
+   "expected": "P narrowed to Guitar + generic; C/L/G still listed",
+   "actual": "P ok=True; C/L/G cards=175",
+   "passed": true
+  },
+  {
+   "id": "I03",
+   "case": "Guitar strength selected, then instrument changed to Voice",
+   "expected": "flagged, copy disabled (not silently kept)",
+   "actual": "copy before=True after=False; check=\"['\u2718 Performance statement matches the student\u2019s instrument (Voice) \u2014 it is a Guitar statement']\"",
+   "passed": true
+  },
+  {
+   "id": "I04",
+   "case": "Stage 4: click Voice chip (still off in Stage 4)",
+   "expected": "disabled; bank not emptied",
+   "actual": "class=\"chip disabled\"; bank cards=235",
+   "passed": true
+  },
+  {
+   "id": "N01",
+   "case": "Next student",
+   "expected": "both comments cleared; tier cleared; Stage/Course/Level/Topic kept",
+   "actual": "before=6 filled; after LS=[False, False, False] STI=[False, False, False]; context kept=True; tier cleared=True",
+   "passed": true
+  },
+  {
+   "id": "L01",
+   "case": "Stage 4 Sentral limit",
+   "expected": "200 per box, fixed",
+   "actual": "LS=\"200\" disabled=True; STI=\"200\"",
+   "passed": true
+  },
+  {
+   "id": "L02",
+   "case": "Stage 4 bank shows the short set only",
+   "expected": "235 short statements",
+   "actual": "235 shown; all short=True",
+   "passed": true
+  },
+  {
+   "id": "L03",
+   "case": "Longest short sentences in every slot",
+   "expected": "both <= 200 and copyable",
+   "actual": "LS 197 chars copy=True; STI 197 chars copy=True; count=\"197 characters / limit 200 \u00b7 target 161\u2013199\"",
+   "passed": true
+  },
+  {
+   "id": "L04",
+   "case": "Longest General strategy swapped in",
+   "expected": "<= 200, copyable",
+   "actual": "197 chars copy=True",
+   "passed": true
+  },
+  {
+   "id": "L05",
+   "case": "Stage 5 limits",
+   "expected": "Strengths fixed at 800; Strategies editable and blank",
+   "actual": "LS=\"800\" disabled=True; STI=\"\" disabled=False",
+   "passed": true
+  },
+  {
+   "id": "L06",
+   "case": "Every possible Stage 4 short combination (static check)",
+   "expected": "<= 200",
+   "actual": "worst case 197 chars",
+   "passed": true
+  },
+  {
+   "id": "K01",
+   "case": "Both comments, counts, Copy and Clear in the dock",
+   "expected": "Strengths first by default; all inside",
+   "actual": "order=['card-LS', 'card-STI']; inside=True",
+   "passed": true
+  },
+  {
+   "id": "K02",
+   "case": "Order switch: Improvements first",
+   "expected": "dock and builders reorder",
+   "actual": "dock=['card-STI', 'card-LS']; builders=['builder-STI', 'builder-ls', 'review-panel']; pressed=true",
+   "passed": true
+  },
+  {
+   "id": "K03",
+   "case": "Order remembered after reload",
+   "expected": "Improvements still first",
+   "actual": "dock=['card-STI', 'card-LS']",
+   "passed": true
+  },
+  {
+   "id": "K04",
+   "case": "Comment shows as it is built",
+   "expected": "partial text + still to add",
+   "actual": "preview=\"Performs rhythm and melody with real control, feel and intent. Composes inventive rhythms that groove and hold together well.\"; status=\"Still to add: Listening\"; copy=False",
+   "passed": true
+  },
+  {
+   "id": "K05",
+   "case": "Complete comment status",
+   "expected": "Ready to copy, Copy enabled",
+   "actual": "status=\"\u2714 Ready to copy\"; copy=True",
+   "passed": true
+  },
+  {
+   "id": "W01",
+   "case": "Every Stage 4 comment (incl. a General swap) in target range",
+   "expected": "161-199",
+   "actual": "167-197",
+   "passed": true
+  },
+  {
+   "id": "W02",
+   "case": "Every Stage 5 comment (incl. a General swap) in target range",
+   "expected": "250-300",
+   "actual": "251-299",
+   "passed": true
+  },
+  {
+   "id": "W03",
+   "case": "Stage 4 General strength swapped into Listening",
+   "expected": "comment ends with it, copyable, target shown",
+   "actual": "copy=True; ends=True; count=\"191 characters / limit 200 \u00b7 target 161\u2013199\"",
+   "passed": true
+  },
+  {
+   "id": "W04",
+   "case": "Only one General statement per comment",
+   "expected": "second General refused",
+   "actual": "General in comment=1",
+   "passed": true
+  },
+  {
+   "id": "W05",
+   "case": "Stage 4 Piano chip",
+   "expected": "Guitar/Piano on, Drums off; Piano + generic shown",
+   "actual": "{'Guitar': False, 'Piano': False, 'Drums': True}; instruments=['Instrument', 'Piano']; n=70",
+   "passed": true
+  },
+  {
+   "id": "W06",
+   "case": "Stage 5 General strength swapped into Composition",
+   "expected": "copyable, 250-300 chars",
+   "actual": "279 chars copy=True",
+   "passed": true
+  },
+  {
+   "id": "A01",
+   "case": "Keyboard: focus Stage chip, Enter selects, Space deselects; aria-pressed",
+   "expected": "operable",
+   "actual": "{'tag': 'BUTTON', 'pressed': 'false'}; keyboard ok=True",
+   "passed": true
+  },
+  {
+   "id": "E01",
+   "case": "JavaScript errors during whole run",
+   "expected": "none",
+   "actual": "none",
+   "passed": true
+  }
+ ]
+}

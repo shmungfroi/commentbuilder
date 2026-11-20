@@ -1,5 +1,31 @@
 # Changelog — Music Report Comment Builder
 
+## v5.9 — 20 Nov 2026
+
+Approved 20 Nov 2026. Bank `data/statement_bank_v5.9.json` (3,785 statements); app 5.9.
+
+### Stage 4
+- **Target comment length 161–199** (Sentral limit 200). Every sentence is 53–65 characters, so every comment lands at 161–197, including one with a General swap. 110 sentences reworded.
+- **Classroom music aptitude** worked into the Performance, Composition and Listening wording.
+- **New General Learning Strengths:** 30 sentences in 6 areas (Ensemble Awareness, Musical Ear, Rehearsal Focus, Creative Risk-Taking, Care of Instruments, Engagement). Any one can replace a slot, as General strategies already could.
+- **General strategies reworked toward music.** Same 7 areas and IDs.
+- **Guitar and Piano Performance versions:** 50 sentences. Beats and Tunes has Piano; Sound Lab and Jazz have Guitar and Piano; Rocking the Guitar is already guitar. Piano versions say "keyboard". The Guitar and Piano chips now work in Stage 4; the other instruments stay off.
+- Review list: `docs/STAGE4_SHORT_SET_v5.9.md`. Diff: `data/diffs/v5.7_to_v5.9_stage4.json`.
+
+### Stage 5
+- **Target comment length 250–300** (both boxes). Every sentence is 83–99 characters, so every comment lands at 251–299. 317 out-of-band sentences reworded, keeping meaning and tier.
+- **New General Learning Strengths:** the same 6 areas × 5 tiers, at Stage 5 length.
+- Review list: `docs/STAGE5_CHANGES_v5.9.md`. Diff: `data/diffs/v5.7_to_v5.9_stage5.json`.
+
+### App
+- **General swap works in Learning Strengths too** (Stage 4/5). One General statement per comment.
+- **Target length** is shown in the count (e.g. "175 characters / limit 200 · target 161–199") and checked in the checklist.
+- **General area filter** works for both comment types, and shows only the areas that exist for the current choice.
+- Tools: `tools/stage4_v59.py`, `tools/stage5_v59.py`, `tools/finalize_v59.py`.
+
+### Tests
+- 6 new (W01–W06): every Stage 4 and Stage 5 combination in range, General strength swap in Stage 4 and 5, one General per comment, Guitar/Piano chips in Stage 4. I04 now uses Voice, which stays off in Stage 4. 84/84 pass.
+
 ## v5.8 — 20 Nov 2026
 
 Layout change so the comment being built is always visible and can be copied without scrolling. **Statement bank unchanged (5.7).**
